@@ -160,7 +160,7 @@ private:
 
     bool solve_internal(RankNode *);
 	bool validate_internal(char, int);
-
+	void cleanup(RankNode *, vector<rank_list *>&, Puzzle *);
 
 	bool update_symbols(Symbol*, Symbol **, unsigned char);
 	bool update_line(Symbol *, Line *);

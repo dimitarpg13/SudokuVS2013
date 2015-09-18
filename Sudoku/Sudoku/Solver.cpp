@@ -787,11 +787,22 @@ namespace sudoku
 
   }
 
+  void BTSolver::cleanup(RankNode * head, vector<rank_list *>& ranks, Puzzle * puzzle)
+  {
+	  delete puzzle;
+
+	  for (vector<rank_list *>::iterator it = ranks.begin(); it != ranks.end(); it++)
+		 if (*it != NULL)
+		   delete *it;
+
+
+
+  }
 
   bool BTSolver::validate_internal(char val, int idx)
   {
 	  bool res = true;
-
+	  m_lError = SUDOKU_NO_ERROR; // clear the errors from the previous iteration
 	  Puzzle * srcCopy = m_pSrc->getCopy();
 
 	  vector<rank_list *> rankedCandidatesCopy(m_pSrc->getDim(), NULL);
@@ -816,6 +827,7 @@ namespace sudoku
 	  itA = find(curListSrc->begin(), curListSrc->end(), val);
 	  if (itA == curListSrc->end())
       {
+		 cleanup(head, rankedCandidatesCopy, srcCopy);
 		 m_lError |= SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE;
 		 return false;
 	  }
@@ -823,6 +835,7 @@ namespace sudoku
 
 	  res &= solve_internal(head);
 		
+	  cleanup(head, rankedCandidatesCopy, srcCopy);
 
 	  return res;
 
@@ -838,8 +851,8 @@ namespace sudoku
 	  int idx = 0;
       while (head != NULL)
       {
-		  if (validate_internal(head->Val->first->getValue(), idx++))
-			  return false;
+		 if (validate_internal(head->Val->first->getValue(), idx++))
+		   return false;
        	
     	 head = head->Next;
       }

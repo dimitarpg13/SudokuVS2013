@@ -57,7 +57,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	cout << endl << endl;
 
 
-    cout << "example2:" << endl;
+  /*  cout << "example2:" << endl;
     p->load("example2.txt");
     s = new BTSolver(p);
     if (!s->solve())
@@ -141,7 +141,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
    s->printToConsole();
 
    delete s;
-   cout << endl << endl;
+   cout << endl << endl*/;
    
 
 
