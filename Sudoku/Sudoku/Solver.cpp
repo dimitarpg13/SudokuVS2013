@@ -787,13 +787,15 @@ namespace sudoku
 
   }
 
-  void BTSolver::cleanup(RankNode * head, vector<rank_list *>& ranks, Puzzle * puzzle)
+  void BTSolver::cleanup(Puzzle * puzzle, vector<rank_list *>& ranks, RankNode * head)
   {
 	  delete puzzle;
 
 	  for (vector<rank_list *>::iterator it = ranks.begin(); it != ranks.end(); it++)
 		 if (*it != NULL)
 		   delete *it;
+
+	  // TO DO: clean up the nodes of the RankNode list
 
 
 
@@ -830,7 +832,7 @@ namespace sudoku
 	  itA = find(curListSrc->begin(), curListSrc->end(), val);
 	  if (itA == curListSrc->end())
       {
-		 cleanup(head, rankedCandidatesCopy, srcCopy);
+		  cleanup(srcCopy, rankedCandidatesCopy, head);
 		 m_lError |= SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE;
 		 return false;
 	  }
@@ -838,7 +840,7 @@ namespace sudoku
 
 	  res &= solve_internal(head);
 		
-	  cleanup(head, rankedCandidatesCopy, srcCopy);
+	  cleanup(srcCopy, rankedCandidatesCopy, head);
 
 	  return res;
 
