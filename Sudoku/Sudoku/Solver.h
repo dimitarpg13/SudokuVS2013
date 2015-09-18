@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <iterator>
 
+
 #include "Sudoku.h"
 
 using namespace std;
@@ -159,8 +160,7 @@ namespace sudoku
 		bool process_region_assignments(Region *, set<char>&);
 
 
-		int createGrade(vector<rank_list *> &);
-
+		
 		RankNode * init_rank_node_list(vector<rank_list *> &);
 
 
@@ -178,7 +178,13 @@ namespace sudoku
 		bool restore_region(Symbol *, Region *);
 		bool restore_assignment(Symbol *);
 
+		int createGrade(vector<rank_list *> &);
+		void initCummDistribEasyLevel(vector<int> &);
+		void initCummDistribMediumLevel(vector<int> & cd);
+		void initCummDistribHardLevel(vector<int> & cd);
+		void initCummDistribSamuraiLevel(vector<int> & cd);
 
+#ifdef _DEBUG
 		// helper methods for debugging
 		void print_ranked_candidates(vector<rank_list *> &);
 		template<typename Iterator>
@@ -186,6 +192,7 @@ namespace sudoku
 		{
 			for_each(begin, end, Printer(cout));
 		}
+#endif
 
 	};
 

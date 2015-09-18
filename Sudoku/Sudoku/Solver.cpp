@@ -10,6 +10,8 @@
 
 namespace sudoku
 {
+
+#ifdef _DEBUG
    void BTSolver::print_ranked_candidates(vector<rank_list *> & c)
    {
 	   cout << "Total number of distinct ranks: " << m_iRankCount << endl;
@@ -36,6 +38,7 @@ namespace sudoku
             }
 	  	}
    }
+#endif
 
   RankNode * BTSolver::init_rank_node_list(vector<rank_list *> & c)
   {
@@ -63,6 +66,55 @@ namespace sudoku
 	  }
 
 	  return head;
+  }
+
+  void BTSolver::initCummDistribEasyLevel(vector<int> & cd)
+  {
+	  cd.push_back(8);
+	  cd.push_back(15); // the count of all nodes with 1 or 2 possible assignments
+	  cd.push_back(29); // the count of all nodes with 1,2 or 3 possible assignments
+	  cd.push_back(42); // the count of all nodes with 1,2,3 or 4 possible assignments
+	  cd.push_back(48); // and so on
+	  cd.push_back(49);
+	  cd.push_back(49);
+	  cd.push_back(49);
+
+  }
+
+  void BTSolver::initCummDistribMediumLevel(vector<int> & cd)
+  {
+	  cd.push_back(1);
+	  cd.push_back(15);
+	  cd.push_back(29);
+	  cd.push_back(48);
+	  cd.push_back(51);
+	  cd.push_back(53);
+	  cd.push_back(53);
+	  cd.push_back(53);
+  }
+
+  void BTSolver::initCummDistribHardLevel(vector<int> & cd)
+  {
+	  cd.push_back(0);
+	  cd.push_back(9);
+	  cd.push_back(20);
+	  cd.push_back(36);
+	  cd.push_back(49);
+	  cd.push_back(62);
+	  cd.push_back(62);
+	  cd.push_back(62);
+  }
+
+  void BTSolver::initCummDistribSamuraiLevel(vector<int> & cd)
+  {
+	  cd.push_back(1);
+	  cd.push_back(5);
+	  cd.push_back(21);
+	  cd.push_back(46);
+	  cd.push_back(53);
+	  cd.push_back(57);
+	  cd.push_back(57);
+	  cd.push_back(57);
   }
 
   // we define the rank distribution of a puzzle as a map with key the number of possible assignments
@@ -105,6 +157,11 @@ namespace sudoku
   {
 	  double grade = -1.0;
 
+	  vector<int> easyCD, mediumCD, hardCD, samuraiCD;
+	  initCummDistribEasyLevel(easyCD);
+	  initCummDistribMediumLevel(mediumCD);
+	  initCummDistribHardLevel(hardCD);
+	  initCummDistribSamuraiLevel(samuraiCD);
 
 
 
