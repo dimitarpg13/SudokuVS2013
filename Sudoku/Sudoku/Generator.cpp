@@ -69,8 +69,9 @@ namespace sudoku
 		print_row(buffer);
 #endif
 
-		m_pParser->parse(buffer);
+		m_pSrc->load(buffer);
 	
+		
 
 		return res;
 	}

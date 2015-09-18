@@ -52,13 +52,13 @@ namespace sudoku
 	class RGenerator : public Generator
 	{
 	private:		
-		Parser * m_pParser;
+		Puzzle * m_pSrc;
 		void fillRandom(vector<unsigned char> &, int);
 	public:
 	
 		RGenerator(unsigned char dim, unsigned char regionDim) : Generator(dim, regionDim)
 		{
-			m_pParser = new Parser(dim, regionDim);
+			m_pSrc = new Puzzle(dim, regionDim);
 
 		}
 

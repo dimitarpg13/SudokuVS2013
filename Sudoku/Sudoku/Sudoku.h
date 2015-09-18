@@ -411,6 +411,20 @@ namespace sudoku
 			return res;
 		}
 
+		bool load(vector<unsigned char>& buffer)
+		{
+			m_lError = 0;
+			m_pRows = NULL;
+			m_pCols = NULL;
+			m_pRegions = NULL;
+
+			bool res = m_pParser->parse(buffer);
+
+			res = process_parsed_config();
+
+			return res;
+		}
+
 		Puzzle * const getCopy();
 
 		void printToConsole();

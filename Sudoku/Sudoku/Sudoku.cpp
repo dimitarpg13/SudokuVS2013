@@ -267,12 +267,86 @@ namespace sudoku
 	bool Parser::parse(vector<unsigned char>& buffer)
 	{
 		bool res = true;
+		unsigned int n = m_iDim * m_iDim;
+		if (buffer.size() < n)
+		{
+			m_lError |= SUDOKU_ERROR_INCORRECT_INPUT_FORMAT;
+			return false;
+		}
+
+		init();
 
 		unsigned char c;
+		unsigned char curRowIdx = 0, curColIdx = 0, curRegIdx = 0;
+		unsigned int idx = 0;
+		Symbol * curSymbol = NULL;
+		HorizLine * curRow = NULL;
+		VertLine * curCol = NULL;
+		Region * curRegion = NULL;
 		while (buffer.size() > 0)
 		{
 			c = buffer.back();
 			buffer.pop_back();
+
+			if (curRow == NULL)
+#ifndef _DEBUG
+				curRow = new HorizLine(m_iDim, m_iRegionDim);
+#else
+				curRow = new HorizLine(m_iDim, m_iRegionDim, curRowIdx);
+#endif
+
+			if (m_pCols[curColIdx] != NULL)
+				curCol = m_pCols[curColIdx];
+			else
+			{
+#ifndef _DEBUG
+				curCol = new VertLine(m_iDim, m_iRegionDim);
+#else
+				curCol = new VertLine(m_iDim, m_iRegionDim, curColIdx);
+#endif
+				m_pCols[curColIdx] = curCol;
+			}
+
+			curRegIdx = getRegionIdx(curRowIdx, curColIdx);
+			if (m_pRegions[curRegIdx] != NULL)
+				curRegion = m_pRegions[curRegIdx];
+			else
+			{
+				curRegion = new Region(m_iDim, m_iRegionDim);
+				m_pRegions[curRegIdx] = curRegion;
+			}
+
+			curSymbol = new Symbol(c, curRow, curCol);
+			curRow->addSymbol(curSymbol);
+			if (curColIdx % m_iRegionDim == 0)
+				curRow->addRegion(curRegion);
+
+			curCol->addSymbol(curSymbol);
+			if (curRowIdx % m_iRegionDim == 0)
+				curCol->addRegion(curRegion);
+
+			curRegion->addSymbol(curSymbol);
+			if (curColIdx == 0)
+				curRegion->addRow(curRow);
+
+			curRegion->addCol(curCol);
+
+			if (curColIdx == m_iDim - 1)
+			{
+				m_pRows[curRowIdx] = curRow;
+				curRow = NULL;
+				curRowIdx++;
+				curColIdx = 0;
+			}
+		
+
+
+			curColIdx++;
+
+		
+			if (curRowIdx == m_iDim)
+				break;
+
 		}
 
 		return res;
