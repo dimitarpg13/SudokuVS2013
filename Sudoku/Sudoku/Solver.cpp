@@ -133,7 +133,7 @@ namespace sudoku
 	  
 	  res = 0.0;
 	  for (unsigned short i = 0; i < cd1.size(); i++)
-		  res += abs(cd1[i] - cd2[i]);
+		  res += pow(abs(cd1[i] - cd2[i]),2.0);
 	  
 	  return res;
   }
