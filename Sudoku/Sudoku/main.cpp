@@ -50,6 +50,16 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	{
 		cout << "The solution is not unique!" << endl;
 	}
+	else
+	{
+		cout << endl << "This is unique solution." << endl;
+	}
+
+	if (s->getGrade() > 0)
+	{
+
+		cout << "The grade of the puzzle is : " << s->getGrade() << endl;
+	}
 
 	cout << endl << "The solution for example1 is:" << endl;
 	s->printToConsole();

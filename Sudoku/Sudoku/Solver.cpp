@@ -6,6 +6,7 @@
  */
 
 #include <math.h>
+#include <limits>
 #include "Solver.h"
 
 namespace sudoku
@@ -70,6 +71,7 @@ namespace sudoku
 
   void BTSolver::initCummDistribEasyLevel(vector<int> & cd)
   {
+	  cd.clear();
 	  cd.push_back(8);
 	  cd.push_back(15); // the count of all nodes with 1 or 2 possible assignments
 	  cd.push_back(29); // the count of all nodes with 1,2 or 3 possible assignments
@@ -83,6 +85,7 @@ namespace sudoku
 
   void BTSolver::initCummDistribMediumLevel(vector<int> & cd)
   {
+	  cd.clear();
 	  cd.push_back(1);
 	  cd.push_back(15);
 	  cd.push_back(29);
@@ -95,6 +98,7 @@ namespace sudoku
 
   void BTSolver::initCummDistribHardLevel(vector<int> & cd)
   {
+	  cd.clear();
 	  cd.push_back(0);
 	  cd.push_back(9);
 	  cd.push_back(20);
@@ -107,6 +111,7 @@ namespace sudoku
 
   void BTSolver::initCummDistribSamuraiLevel(vector<int> & cd)
   {
+	  cd.clear();
 	  cd.push_back(1);
 	  cd.push_back(5);
 	  cd.push_back(21);
@@ -117,6 +122,43 @@ namespace sudoku
 	  cd.push_back(57);
   }
 
+  double BTSolver::cummDistribErrorFunc(vector<int> & cd1, vector<int> & cd2)
+  {
+	  double res = -1.0;
+	  if (cd1.size() != cd2.size())
+	  {
+		  m_lError |= SUDOKU_ERROR_GRADING;
+		  return res;
+	  }
+	  
+	  res = 0.0;
+	  for (unsigned short i = 0; i < cd1.size(); i++)
+		  res += abs(cd1[i] - cd2[i]);
+	  
+	  return res;
+  }
+
+  void BTSolver::calcCummDistr(vector<rank_list *> & rankedCandidates, vector<int> & cd)
+  {
+	  int runningSum = 0, idx = 0;
+	  cd.clear();
+	  for (vector<rank_list *>::iterator it = rankedCandidates.begin(); it != rankedCandidates.end(); it++)
+	  {
+		  if ((*it) != NULL)		  
+			  runningSum += (*it)->size();
+
+		  cd.push_back(runningSum);
+
+		  idx++;
+	  }
+
+	  cd.pop_back();
+
+  }
+
+  // return values: 1 - Easy, 2 - Medium, 3 - Hard, 4 - Samurai
+  //
+  // details:
   // we define the rank distribution of a puzzle as a map with key the number of possible assignments
   // and a value is the node count of all nodes with this number of possible assignments.
   // we will fit 
@@ -155,17 +197,52 @@ namespace sudoku
   //
   int BTSolver::createGrade(vector<rank_list *> & rankedCandidates)
   {
-	  double grade = -1.0;
-
-	  vector<int> easyCD, mediumCD, hardCD, samuraiCD;
-	  initCummDistribEasyLevel(easyCD);
-	  initCummDistribMediumLevel(mediumCD);
-	  initCummDistribHardLevel(hardCD);
-	  initCummDistribSamuraiLevel(samuraiCD);
+	 
 
 
+	  if (m_pSrc->getDim() == Puzzle::CLASSIC_SUDOKU_DIM &&
+		  m_pSrc->getRegionDim() == Puzzle::CLASSIC_SUDOKU_REGION_DIM)
+	  {
+		  vector<int> easyCD, mediumCD, hardCD, samuraiCD, srcCD;
+		  initCummDistribEasyLevel(easyCD);
+		  initCummDistribMediumLevel(mediumCD);
+		  initCummDistribHardLevel(hardCD);
+		  initCummDistribSamuraiLevel(samuraiCD);
+		  calcCummDistr(rankedCandidates,srcCD);
 
-	  return (int) ceil(grade);
+		  vector<double> errVect;
+		  double res = -1.0;
+		  res = cummDistribErrorFunc(srcCD, easyCD);
+		  errVect.push_back(res);
+		  res = cummDistribErrorFunc(srcCD, mediumCD);
+		  errVect.push_back(res);
+		  res = cummDistribErrorFunc(srcCD, hardCD);
+		  errVect.push_back(res);
+		  res = cummDistribErrorFunc(srcCD, samuraiCD);
+		  errVect.push_back(res);
+
+		  double min = numeric_limits<double>::max();
+		  int idx_min = -1;
+		  for (unsigned short i = 0; i < errVect.size(); i++)
+		  {
+			  if (min > errVect[i])
+			  {
+				  min = errVect[i];
+				  idx_min = i;
+			  }
+		  }
+
+		  return idx_min+1;
+
+
+	  }
+	  else
+	  {
+		  m_lError |= SUDOKU_ERROR_FEATURE_NOT_IMPLEMENTED;
+		  return -1;
+	  }
+
+	 
   }
 
   bool BTSolver::solve()
@@ -175,6 +252,7 @@ namespace sudoku
       if (!res)
     	  return res;
 
+	  m_iGrade = createGrade(m_vRankedCandidates);
 
 
 #ifdef _DEBUG

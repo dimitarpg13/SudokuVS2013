@@ -70,6 +70,7 @@ namespace sudoku
 
 		long long getError() { return m_lError; }
 
+		// return values: 1 - Easy, 2 - Medium, 3 - Hard, 4 - Samurai
 		int getGrade() { return m_iGrade;  }
 
 		virtual bool solve() = 0;
@@ -178,7 +179,9 @@ namespace sudoku
 		bool restore_region(Symbol *, Region *);
 		bool restore_assignment(Symbol *);
 
-		int createGrade(vector<rank_list *> &);
+		int createGrade(vector<rank_list *> &); // return values: 1 - Easy, 2 - Medium, 3 - Hard, 4 - Samurai
+		double cummDistribErrorFunc(vector<int> &, vector<int> &);
+		void calcCummDistr(vector<rank_list *> &, vector<int> &);
 		void initCummDistribEasyLevel(vector<int> &);
 		void initCummDistribMediumLevel(vector<int> & cd);
 		void initCummDistribHardLevel(vector<int> & cd);
