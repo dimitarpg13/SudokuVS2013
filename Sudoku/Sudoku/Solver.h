@@ -159,6 +159,7 @@ private:
 
 
     bool solve_internal(RankNode *);
+	bool validate_internal(char, int);
 
 
 	bool update_symbols(Symbol*, Symbol **, unsigned char);

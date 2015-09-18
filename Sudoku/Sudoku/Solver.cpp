@@ -788,50 +788,61 @@ namespace sudoku
   }
 
 
-  // validates the solution and verifies uniqueness
-  bool BTSolver::validate()
+  bool BTSolver::validate_internal(char val, int idx)
   {
 	  bool res = true;
 
+	  Puzzle * srcCopy = m_pSrc->getCopy();
 
-     Puzzle * srcCopy = m_pSrc->getCopy();
+	  vector<rank_list *> rankedCandidatesCopy(m_pSrc->getDim(), NULL);
+	  res &= assign_rank_to_candidates(srcCopy, rankedCandidatesCopy);
+	  if (!res)
+		  return res;
+	  
+	  // the second list serves as a scratch pad in the validation process
+	  RankNode * head = init_rank_node_list(rankedCandidatesCopy);
+	  RankNode * cur = head;
 
-      vector<rank_list *> rankedCandidatesCopy(m_pSrc->getDim(),NULL);
-	   res &= assign_rank_to_candidates(srcCopy,rankedCandidatesCopy);
-	   if (!res)
-	      return res;
+	  Symbol *curSymbSrc = NULL;
+	  list<char> * curListSrc = NULL;
+	  list<char>::iterator itA;
+	  int i = 0;	  
+	  while (cur != NULL && i++ < idx)	  		  
+		 cur = cur->Next;
+	  		  
+	  curSymbSrc = cur->Val->first;
+      curListSrc = curSymbSrc->getAssignments();
 
-      RankNode * headSol = m_lstRankedCandidates;
+	  itA = find(curListSrc->begin(), curListSrc->end(), val);
+	  if (itA == curListSrc->end())
+      {
+		 m_lError |= SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE;
+		 return false;
+	  }
+	  curListSrc->erase(itA);
 
-      // the second list serves as a scratch pad in the validation process
-	  RankNode * headSrc = init_rank_node_list(rankedCandidatesCopy);
+	  res &= solve_internal(head);
+		
 
-	
+	  return res;
 
+  }
 
+  // validates the solution uniqueness
+  bool BTSolver::validate()
+  {
+	  bool res = true;
+    
+      RankNode * head = m_lstRankedCandidates;
 
-
-//      Symbol * curSymbSol = NULL, * curSymbSrc = NULL;
-//      list<char> * curListSrc = NULL;
-//      list<char>::iterator itA;
-//      while (headSol != NULL)
-//      {
-//          curSymbSol = headSol->Val->first;
-//          curSymbSrc = headSrc->Val->first;
-//
-//          curListSrc = curSymbSrc->getAssignments();
-//
-//          itA = find(curListSrc->begin(),curListSrc->end(),curSymbSol->getValue());
-//          if (itA == curListSrc->end())
-//          {
-//        	   m_lError |= SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE;
-//               return false;
-//          }
-//
-//    	  headSol = headSol->Next;
-//    	  headSrc = headSrc->Next;
-//      }
-
+	  int idx = 0;
+      while (head != NULL)
+      {
+		  if (validate_internal(head->Val->first->getValue(), idx++))
+			  return false;
+       	
+    	 head = head->Next;
+      }
 
 
 	  return res;
