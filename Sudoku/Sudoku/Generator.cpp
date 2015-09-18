@@ -17,7 +17,7 @@ namespace sudoku
 {
 	int rand_func(int idx) { return std::rand() % idx; } // random generator
 
-	void RGenerator::fillRandomRow(vector<unsigned char> & row, int n)
+	void RGenerator::fillRandom(vector<unsigned char> & buffer, int n)
 	{
 		
 
@@ -37,7 +37,7 @@ namespace sudoku
 		random_shuffle(arr.begin(), arr.end(), rand_func);
 		for (unsigned short i = 0; i < n; i++)
 		{		
-		   row.push_back(Parser::symbolTable[arr[i]]);
+		   buffer.push_back(Parser::symbolTable[arr[i]]);
 		}
 
 	}
@@ -46,7 +46,7 @@ namespace sudoku
 	void RGenerator::print_row(vector<unsigned char> & v)
 	{
 		cout << endl;
-		for (int i = 0; i < v.size(); i++)
+		for (unsigned int i = 0; i < v.size(); i++)
 		{
 			cout << v[i] << " ";
 			if (i > 0 && (i+1) % m_iDim == 0)
@@ -61,14 +61,15 @@ namespace sudoku
 	{
 		bool res = true;
 
-		vector<unsigned char> row;
+		vector<unsigned char> buffer;
 		int n = 1000;
-		fillRandomRow(row, n);
+		fillRandom(buffer, n);
 		
 #ifdef _DEBUG
-		print_row(row);
+		print_row(buffer);
 #endif
-		
+
+		m_pParser->parse(buffer);
 	
 
 		return res;

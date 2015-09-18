@@ -304,6 +304,7 @@ namespace sudoku
 		Parser(unsigned char dim, unsigned char regionDim, char sep = '.', char eol = '\n');
 
 		bool parse(string inputFile);
+		bool parse(vector<unsigned char>& buffer);
 		~Parser();
 		HorizLine ** getRows() { return m_pRows; }
 		VertLine **  getCols() { return m_pCols; }
@@ -311,7 +312,7 @@ namespace sudoku
 		long long getError() { return m_lError; }
 		const set<char> * getSymbolTable() { return m_pSymbols; }
 		unsigned char getRegionIdx(unsigned char rowIdx, unsigned char colIdx);
-
+		static char symbolTable[];
 	private:
 		bool is_symbol(char c);
 		bool is_separator(char c);
@@ -327,7 +328,7 @@ namespace sudoku
 		HorizLine ** m_pRows;
 		VertLine ** m_pCols;
 		Region ** m_pRegions;
-		static char symbolTable[];
+		
 	};
 
 

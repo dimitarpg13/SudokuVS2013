@@ -263,6 +263,21 @@ namespace sudoku
 	}
 
 
+
+	bool Parser::parse(vector<unsigned char>& buffer)
+	{
+		bool res = true;
+
+		unsigned char c;
+		while (buffer.size() > 0)
+		{
+			c = buffer.back();
+			buffer.pop_back();
+		}
+
+		return res;
+	}
+
 	Puzzle::~Puzzle()
 	{
 		if (m_pRows != NULL)
