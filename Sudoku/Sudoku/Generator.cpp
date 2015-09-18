@@ -5,6 +5,18 @@
  *      Author: Dimitar Gueorguiev
  */
 
+#include "Generator.h"
 
+namespace sudoku
+{
+	bool RGenerator::generate()
+	{
+		bool res = true;
+
+		return res;
+	}
+
+
+}
 
 

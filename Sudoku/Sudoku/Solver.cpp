@@ -64,6 +64,15 @@ namespace sudoku
 	  return head;
   }
 
+
+  int BTSolver::createGrade(vector<rank_list *> & rankedCandidates)
+  {
+	  int grade = -1;
+
+
+	  return grade;
+  }
+
   bool BTSolver::solve()
   {
 	  bool res = true;
@@ -836,8 +845,9 @@ namespace sudoku
 		 m_lError |= SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE;
 		 return false;
 	  }
-	  curListSrc->erase(itA);
-
+	 
+      curListSrc->erase(itA);
+	 
 	  res &= solve_internal(head);
 		
 	  cleanup(srcCopy, rankedCandidatesCopy, head);
