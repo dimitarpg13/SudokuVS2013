@@ -35,6 +35,7 @@ namespace sudoku
 		long long m_lError;
 
 	public:
+	
 		Generator(unsigned char dim, unsigned char regionDim) : m_iDim(dim), m_iRegionDim(regionDim)
 		{
 
@@ -46,11 +47,20 @@ namespace sudoku
 
 	};
 
+	// generates the puzzle by filling rows in consecutive order and then opening holes on specific
+	// places such that the puzzle matches the desired level of difficulty
 	class RGenerator : public Generator
 	{
-
+	private:		
+		void fillRandomRow(vector<unsigned char> &, int);
 	public:
+	
+		RGenerator(unsigned char dim, unsigned char regionDim) : Generator(dim, regionDim)
+		{}
+
 		bool generate();
+
+		
 
 	};
 
