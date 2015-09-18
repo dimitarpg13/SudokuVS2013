@@ -42,22 +42,32 @@ namespace sudoku
 
 	}
 
-	
+#ifdef _DEBUG
+	void RGenerator::print_row(vector<unsigned char> & v)
+	{
+		cout << endl;
+		for (int i = 0; i < v.size(); i++)
+		{
+			cout << v[i] << " ";
+			if (i > 0 && (i+1) % m_iDim == 0)
+				cout << endl;
+		}
+		cout << endl;
+
+	}
+#endif
 
 	bool RGenerator::generate()
 	{
 		bool res = true;
 
 		vector<unsigned char> row;
-		int n = m_iDim * m_iDim;
+		int n = 1000;
 		fillRandomRow(row, n);
-
-		cout << "{";
-		for (int i = 0; i < n; i++)
-		{			
-		   cout << row[i] << " ";						
-		}
-		cout << "}" << endl;
+		
+#ifdef _DEBUG
+		print_row(row);
+#endif
 		
 	
 
