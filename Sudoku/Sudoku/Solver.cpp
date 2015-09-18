@@ -799,6 +799,9 @@ namespace sudoku
 
   }
 
+  // validate a different configuration obtained by modifying the assignment list 
+  // removing a single character which is the value of the current symbol in the original solution
+  // if the new config still can be solved then the original solution is not unique
   bool BTSolver::validate_internal(char val, int idx)
   {
 	  bool res = true;
