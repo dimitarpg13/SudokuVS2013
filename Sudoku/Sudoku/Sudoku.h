@@ -319,6 +319,8 @@ namespace sudoku
 		bool is_end_of_line(char c);
 		void init();
 		void cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount);
+		bool validate(char c, HorizLine * row, VertLine * col, Region * region,
+			unsigned char curRowIdx, unsigned char curColIdx, unsigned char curRegIdx);
 
 		set<char> * m_pSymbols;
 		unsigned char m_iDim, m_iRegionDim;

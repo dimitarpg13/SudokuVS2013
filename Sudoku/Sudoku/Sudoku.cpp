@@ -262,7 +262,30 @@ namespace sudoku
 		return res;
 	}
 
+	bool Parser::validate(char c, HorizLine * row, VertLine * col, Region * region,
+		                  unsigned char curRowIdx, unsigned char curColIdx, unsigned char curRegIdx)
+	{
+		if (row == NULL || col == NULL || region == NULL)
+			return false;
 
+		for (int i = 0; i <= curRowIdx; i++)
+		{
+			if (c == col->getSymbols()[i]->getValue())
+				return false;
+		}
+
+		for (int j = 0; j <= curColIdx; j++)
+		{
+			if (c == row->getSymbols()[j]->getValue())
+				return false;
+		}
+
+		
+
+
+
+		return true;
+	}
 
 	bool Parser::parse(vector<unsigned char>& buffer)
 	{
@@ -316,6 +339,16 @@ namespace sudoku
 				m_pRegions[curRegIdx] = curRegion;
 			}
 
+
+			while (buffer.size() > 0 && 
+				   validate(c, curRow, curCol, curRegion, curRowIdx, curColIdx, curRegIdx))
+			{
+				c = buffer.back();
+				buffer.pop_back();
+			}
+
+			
+
 			curSymbol = new Symbol(c, curRow, curCol);
 			curRow->addSymbol(curSymbol);
 			if (curColIdx % m_iRegionDim == 0)
@@ -339,10 +372,7 @@ namespace sudoku
 				curColIdx = 0;
 			}
 		
-
-
 			curColIdx++;
-
 		
 			if (curRowIdx == m_iDim)
 				break;
