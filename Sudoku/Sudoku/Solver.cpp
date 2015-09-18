@@ -5,6 +5,7 @@
  *      Author: Dimitar Gueorguiev
  */
 
+#include <math.h>
 #include "Solver.h"
 
 namespace sudoku
@@ -64,13 +65,50 @@ namespace sudoku
 	  return head;
   }
 
-
+  // we define the rank distribution of a puzzle as a map with key the number of possible assignments
+  // and a value is the node count of all nodes with this number of possible assignments.
+  // we will fit 
+  //  the distribution of easy puzzle (example1.txt) is:
+  //  1 -> 8
+  //  2 -> 7
+  //  3 -> 14
+  //  4 -> 13
+  //  5 -> 6
+  //  6 -> 1
+  //
+  //  the distribution of medium puzzle (example2.txt) is
+  //  1 -> 1
+  //  2 -> 14
+  //  3 -> 14
+  //  4 -> 19
+  //  5 -> 3
+  //  6 -> 2
+  //
+  // the distribution of hard puzzle (example3.txt) is
+  //  2 -> 9
+  //  3 -> 11
+  //  4 -> 16
+  //  5 -> 13
+  //  6 -> 8
+  //
+  // the distribution of samurai puzzle (example4.txt) is
+  //
+  // 1 -> 1
+  // 2 -> 4
+  // 3 -> 16
+  // 4 -> 25
+  // 5 -> 7
+  // 6 -> 4
+  //
+  //
   int BTSolver::createGrade(vector<rank_list *> & rankedCandidates)
   {
-	  int grade = -1;
+	  double grade = -1.0;
 
 
-	  return grade;
+
+
+	  return (int) ceil(grade);
   }
 
   bool BTSolver::solve()
