@@ -88,6 +88,7 @@ namespace sudoku
 		HorizLine * getRow() { return m_pRow; }
 		VertLine * getCol() { return m_pCol; }
 		list<char> * getAssignments() { return m_pAssignments; }
+	
 		char getLastRemoved()
 		{
 			if (!m_skLastRemoved.empty())
@@ -102,7 +103,7 @@ namespace sudoku
 		void setRow(HorizLine * row) { m_pRow = row; }
 		void setCol(VertLine * col) { m_pCol = col; }
 		void setAssignments(list<char> * assignments) { m_pAssignments = assignments; }
-		void setLastRemoved(char lastRemoved) { m_skLastRemoved.push(lastRemoved); }
+		void setLastRemoved(char lastRemoved) {	m_skLastRemoved.push(lastRemoved); }
 		void popLastRemoved() { m_skLastRemoved.pop(); }
 		void setCanChoose(bool canChoose) { m_bCanChoose = canChoose; }
 		void incrementFailedCount() { m_iFailedCount++; }
@@ -127,6 +128,7 @@ namespace sudoku
 		unsigned char getRegionDim() { return m_iRegionDim; }
 		Symbol ** const getSymbols() { return m_pSymbols; }
 		Region ** const getRegions() { return m_pRegions; }
+		unsigned char getLastSymbIndx() {  return m_iLastSymbolIdx;	}
 #ifdef _DEBUG
 		unsigned char getIdx() { return m_iMyIdx; }
 #endif
@@ -322,8 +324,9 @@ namespace sudoku
 		bool is_end_of_line(char c);
 		void init();
 		void cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount);
-		bool validate(char c, HorizLine * row, VertLine * col, Region * region,
-			unsigned char curRowIdx, unsigned char curColIdx, unsigned char curRegIdx);
+		bool validate(char c, HorizLine * row, VertLine * col, Region * region);
+		unsigned char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &);
+
 
 		set<char> * m_pSymbols;
 		unsigned char m_iDim, m_iRegionDim;

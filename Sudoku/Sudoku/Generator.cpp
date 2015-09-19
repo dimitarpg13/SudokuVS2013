@@ -62,7 +62,7 @@ namespace sudoku
 		bool res = true;
 
 		vector<unsigned char> buffer;
-		int n = 1000;
+		int n = m_iDim * m_iDim;
 		fillRandom(buffer, n);
 		
 #ifdef _DEBUG

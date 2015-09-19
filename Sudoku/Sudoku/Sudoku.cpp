@@ -179,7 +179,7 @@ namespace sudoku
 
 			if (is_symbol(c))
 			{
-				curSymbol = new Symbol(c, curRow, curCol);
+				curSymbol = new Symbol(c, curRow, curCol, curRegion);
 				curRow->addSymbol(curSymbol);
 				if (curColIdx % m_iRegionDim == 0)
 					curRow->addRegion(curRegion);
@@ -198,7 +198,7 @@ namespace sudoku
 			}
 			else if (is_separator(c))
 			{
-				curSymbol = new Symbol(curRow, curCol);
+				curSymbol = new Symbol(curRow, curCol, curRegion);
 				curRow->addSymbol(curSymbol);
 				if (curColIdx % m_iRegionDim == 0)
 					curRow->addRegion(curRegion);
@@ -262,21 +262,20 @@ namespace sudoku
 		return res;
 	}
 
-	bool Parser::validate(char c, HorizLine * row, VertLine * col, Region * region,
-		                  unsigned char curRowIdx, unsigned char curColIdx, unsigned char curRegIdx)
+	bool Parser::validate(char c, HorizLine * row, VertLine * col, Region * region)
 	{
 		if (row == NULL || col == NULL || region == NULL)
 			return false;
 
-		for (int i = 0; i < curRowIdx; i++)
+		for (int i = 1; i <= col->getLastSymbIndx(); i++)
 		{
-			if (c == col->getSymbols()[i]->getValue())
+			if (c == col->getSymbols()[i-1]->getValue())
 				return false;
 		}
 
-		for (int j = 0; j < curColIdx; j++)
+		for (int j = 1; j <= row->getLastSymbIndx(); j++)
 		{
-			if (c == row->getSymbols()[j]->getValue())
+			if (c == row->getSymbols()[j-1]->getValue())
 				return false;
 		}
 
@@ -287,13 +286,35 @@ namespace sudoku
 		unsigned char vertOffset = curColIdx - vertRegIdx * m_iRegionDim;
 		unsigned char seqIdx = vertOffset * m_iRegionDim + horizOffset;*/
 
-		for (unsigned char k = 0; k < region->getLastSymbIndx(); k++)
+		for (unsigned char k = 1; k <= region->getLastSymbIndx(); k++)
 		{
-			if (c == region->getSymbols()[k]->getValue())
+			if (c == region->getSymbols()[k-1]->getValue())
 				return false;
 		}
 				
 		return true;
+	}
+
+
+	unsigned char Parser::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> & buffer)
+	{
+		char c = 0;
+		
+		HorizLine * curRow = m_pRows[rowIdx];
+		VertLine * curCol = m_pCols[colIdx];
+		Region * curRegion = m_pRegions[regIdx];
+
+		c = buffer.back();
+		buffer.pop_back();
+
+		int k = 0;
+		while (!validate(c, curRow, curCol, curRegion))
+		{
+			c = symbolTable[k++ % m_iDim];
+		}
+
+
+		return c;
 	}
 
 	bool Parser::parse(vector<unsigned char>& buffer)
@@ -308,7 +329,7 @@ namespace sudoku
 
 		init();
 
-		unsigned char c;
+		unsigned char c = 0;
 		unsigned char curRowIdx = 0, curColIdx = 0, curRegIdx = 0;
 		unsigned int idx = 0;
 		Symbol * curSymbol = NULL;
@@ -317,8 +338,7 @@ namespace sudoku
 		Region * curRegion = NULL;
 		while (buffer.size() > 0)
 		{
-			c = buffer.back();
-			buffer.pop_back();
+			
 
 			if (curRow == NULL)
 #ifndef _DEBUG
@@ -348,21 +368,8 @@ namespace sudoku
 				m_pRegions[curRegIdx] = curRegion;
 			}
 
-
-			while (!validate(c, curRow, curCol, curRegion, curRowIdx, curColIdx, curRegIdx))
-			{
-				if (buffer.size() > 0)
-				{
-					c = buffer.back();
-					buffer.pop_back();
-				}
-				else
-				{
-					m_lError |= SUDOKU_ERROR_PUZZLE_GENERATION_FROM_RANDOM_INPUT;
-					return false;
-				}
-			}
-
+			
+			
 			
 
 			curSymbol = new Symbol(c, curRow, curCol, curRegion);
@@ -387,8 +394,8 @@ namespace sudoku
 				curRowIdx++;
 				curColIdx = 0;
 			}
-		
-			curColIdx++;
+			else
+			    curColIdx++;
 		
 			if (curRowIdx == m_iDim)
 				break;
