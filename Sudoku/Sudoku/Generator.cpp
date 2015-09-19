@@ -71,7 +71,9 @@ namespace sudoku
 
 		m_pSrc->load(buffer);
 	
-		
+		m_pSrc->printToConsole();
+
+
 
 		return res;
 	}

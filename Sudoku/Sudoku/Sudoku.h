@@ -39,7 +39,8 @@ namespace sudoku
 		SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE = 16,
 		SUDOKU_ERROR_UNSOLVABLE_CONFIGURATION = 32,
 		SUDOKU_ERROR_FEATURE_NOT_IMPLEMENTED = 64,
-		SUDOKU_ERROR_GRADING = 128
+		SUDOKU_ERROR_GRADING = 128,
+		SUDOKU_ERROR_PUZZLE_GENERATION_FROM_RANDOM_INPUT = 256
 	};
 
 
@@ -233,6 +234,8 @@ namespace sudoku
 		unsigned char getDim() { return m_iDim; };
 		unsigned char getSymbCount() { return m_iSymbCount; };
 		Symbol ** const getSymbols() { return m_pSymbols; };
+		int getLastSymbIndx() { return (int) m_iLastSymbolIdx; };
+
 
 		~Region()
 		{

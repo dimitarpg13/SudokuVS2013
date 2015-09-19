@@ -62,6 +62,11 @@ namespace sudoku
 
 		}
 
+		~RGenerator()
+		{
+			delete m_pSrc;
+		}
+
 		bool generate();
 
 #ifdef _DEBUG

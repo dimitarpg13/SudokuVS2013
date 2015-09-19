@@ -268,22 +268,31 @@ namespace sudoku
 		if (row == NULL || col == NULL || region == NULL)
 			return false;
 
-		for (int i = 0; i <= curRowIdx; i++)
+		for (int i = 0; i < curRowIdx; i++)
 		{
 			if (c == col->getSymbols()[i]->getValue())
 				return false;
 		}
 
-		for (int j = 0; j <= curColIdx; j++)
+		for (int j = 0; j < curColIdx; j++)
 		{
 			if (c == row->getSymbols()[j]->getValue())
 				return false;
 		}
 
-		
+		/*unsigned char M = m_iDim / m_iRegionDim;
+		unsigned char horizRegIdx = curRegIdx % M;
+		unsigned char vertRegIdx = curRegIdx / M;
+		unsigned char horizOffset = curColIdx % m_iRegionDim;
+		unsigned char vertOffset = curColIdx - vertRegIdx * m_iRegionDim;
+		unsigned char seqIdx = vertOffset * m_iRegionDim + horizOffset;*/
 
-
-
+		for (unsigned char k = 0; k < region->getLastSymbIndx(); k++)
+		{
+			if (c == region->getSymbols()[k]->getValue())
+				return false;
+		}
+				
 		return true;
 	}
 
@@ -340,16 +349,23 @@ namespace sudoku
 			}
 
 
-			while (buffer.size() > 0 && 
-				   validate(c, curRow, curCol, curRegion, curRowIdx, curColIdx, curRegIdx))
+			while (!validate(c, curRow, curCol, curRegion, curRowIdx, curColIdx, curRegIdx))
 			{
-				c = buffer.back();
-				buffer.pop_back();
+				if (buffer.size() > 0)
+				{
+					c = buffer.back();
+					buffer.pop_back();
+				}
+				else
+				{
+					m_lError |= SUDOKU_ERROR_PUZZLE_GENERATION_FROM_RANDOM_INPUT;
+					return false;
+				}
 			}
 
 			
 
-			curSymbol = new Symbol(c, curRow, curCol);
+			curSymbol = new Symbol(c, curRow, curCol, curRegion);
 			curRow->addSymbol(curSymbol);
 			if (curColIdx % m_iRegionDim == 0)
 				curRow->addRegion(curRegion);
