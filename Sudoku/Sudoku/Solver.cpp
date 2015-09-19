@@ -5,11 +5,8 @@
  *      Author: Dimitar Gueorguiev
  */
 
-<<<<<<< HEAD
 #include <math.h>
 #include <limits>
-=======
->>>>>>> parent of 08ff0b2... 9-18-15 10:15am
 #include "Solver.h"
 
 namespace sudoku
@@ -72,7 +69,6 @@ namespace sudoku
 	  return head;
   }
 
-<<<<<<< HEAD
   void BTSolver::initCummDistribEasyLevel(vector<int> & cd)
   {
 	  cd.clear();
@@ -247,15 +243,6 @@ namespace sudoku
 	  }
 
 	 
-=======
-
-  int BTSolver::createGrade(vector<rank_list *> & rankedCandidates)
-  {
-	  int grade = -1;
-
-
-	  return grade;
->>>>>>> parent of 08ff0b2... 9-18-15 10:15am
   }
 
   bool BTSolver::solve()
@@ -502,11 +489,7 @@ namespace sudoku
           // false without registering an error condition. If I do that then example4
           // fails on the backtracking and returns unsolvable configuration error on
           // the 11317th iteration which means that another bug is lurking around
-<<<<<<< HEAD
-          /*  else
-=======
             else
->>>>>>> origin/master
             {
           	  if (curSymbol != s && s->getValue() == curSymbol->getValue())
         		  return false;
