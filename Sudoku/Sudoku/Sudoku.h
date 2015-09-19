@@ -309,7 +309,7 @@ namespace sudoku
 		Parser(unsigned char dim, unsigned char regionDim, char sep = '.', char eol = '\n');
 
 		bool parse(string inputFile);
-		bool parse(vector<unsigned char>& buffer);
+		bool parse(vector<char>& buffer);
 		~Parser();
 		HorizLine ** getRows() { return m_pRows; }
 		VertLine **  getCols() { return m_pCols; }
@@ -325,7 +325,7 @@ namespace sudoku
 		void init();
 		void cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount);
 		bool validate(char c, HorizLine * row, VertLine * col, Region * region);
-		unsigned char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &);
+		char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &);
 
 
 		set<char> * m_pSymbols;
@@ -419,7 +419,7 @@ namespace sudoku
 			return res;
 		}
 
-		bool load(vector<unsigned char>& buffer)
+		bool load(vector<char>& buffer)
 		{
 			m_lError = 0;
 			m_pRows = NULL;

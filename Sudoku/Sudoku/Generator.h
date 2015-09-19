@@ -53,7 +53,7 @@ namespace sudoku
 	{
 	private:		
 		Puzzle * m_pSrc;
-		void fillRandom(vector<unsigned char> &, int);
+		void fillRandom(vector<char> &, int);
 	public:
 	
 		RGenerator(unsigned char dim, unsigned char regionDim) : Generator(dim, regionDim)

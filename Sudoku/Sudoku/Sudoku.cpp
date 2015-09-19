@@ -296,7 +296,7 @@ namespace sudoku
 	}
 
 
-	unsigned char Parser::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> & buffer)
+	char Parser::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> & buffer)
 	{
 		char c = 0;
 		
@@ -317,7 +317,7 @@ namespace sudoku
 		return c;
 	}
 
-	bool Parser::parse(vector<unsigned char>& buffer)
+	bool Parser::parse(vector<char>& buffer)
 	{
 		bool res = true;
 		unsigned int n = m_iDim * m_iDim;
@@ -369,7 +369,7 @@ namespace sudoku
 			}
 
 			
-			
+			c = nextChar(curRowIdx, curColIdx, curRegIdx, buffer);
 			
 
 			curSymbol = new Symbol(c, curRow, curCol, curRegion);

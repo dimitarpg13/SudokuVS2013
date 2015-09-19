@@ -17,7 +17,7 @@ namespace sudoku
 {
 	int rand_func(int idx) { return std::rand() % idx; } // random generator
 
-	void RGenerator::fillRandom(vector<unsigned char> & buffer, int n)
+	void RGenerator::fillRandom(vector<char> & buffer, int n)
 	{
 		
 
@@ -61,7 +61,7 @@ namespace sudoku
 	{
 		bool res = true;
 
-		vector<unsigned char> buffer;
+		vector<char> buffer;
 		int n = m_iDim * m_iDim;
 		fillRandom(buffer, n);
 		
