@@ -223,7 +223,7 @@ namespace sudoku
 	public:
 		Region(unsigned char dim, unsigned char regionDim) :
 			m_iDim(dim), m_iRegionDim(regionDim),
-			m_iLastSymbolIdx(-1), m_iLastRowIdx(-1), m_iLastColIdx(-1)
+			m_iLastSymbolIdx(0), m_iLastRowIdx(0), m_iLastColIdx(0)
 		{
 			m_iSymbCount = m_iRegionDim * m_iRegionDim;
 			m_pSymbols = new Symbol*[m_iSymbCount]; // the number of symbols in single region
@@ -234,7 +234,7 @@ namespace sudoku
 		unsigned char getDim() { return m_iDim; };
 		unsigned char getSymbCount() { return m_iSymbCount; };
 		Symbol ** const getSymbols() { return m_pSymbols; };
-		int getLastSymbIndx() { return (int) m_iLastSymbolIdx; };
+		unsigned char getLastSymbIndx() { return m_iLastSymbolIdx; };
 
 
 		~Region()

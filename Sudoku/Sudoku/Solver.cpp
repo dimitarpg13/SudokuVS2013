@@ -489,11 +489,11 @@ namespace sudoku
           // false without registering an error condition. If I do that then example4
           // fails on the backtracking and returns unsolvable configuration error on
           // the 11317th iteration which means that another bug is lurking around
-            else
+          /*  else
             {
           	  if (curSymbol != s && s->getValue() == curSymbol->getValue())
         		  return false;
-            }
+            } */
 
       }
 
