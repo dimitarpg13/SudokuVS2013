@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 ﻿Build started 9/18/2015 10:08:14 PM.
+=======
+<<<<<<< HEAD
+﻿Build started 9/18/2015 9:21:51 PM.
+=======
+﻿Build started 9/18/2015 9:37:58 AM.
+>>>>>>> parent of 08ff0b2... 9-18-15 10:15am
+>>>>>>> origin/master
      1>Project "C:\Users\dgueorgu\Documents\GitHub\SudokuVS2013\Sudoku\Sudoku\Sudoku.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Generator.cpp main.cpp Solver.cpp stdafx.cpp Sudoku.cpp
@@ -19,4 +27,12 @@
 
 Build succeeded.
 
+<<<<<<< HEAD
 Time Elapsed 00:00:02.95
+=======
+<<<<<<< HEAD
+Time Elapsed 00:00:02.79
+=======
+Time Elapsed 00:00:02.61
+>>>>>>> parent of 08ff0b2... 9-18-15 10:15am
+>>>>>>> origin/master
