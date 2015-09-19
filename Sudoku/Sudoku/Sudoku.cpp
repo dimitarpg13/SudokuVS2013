@@ -270,7 +270,7 @@ namespace sudoku
 		Region * region = m_pRegions[regIdx];
 
 		if (row == NULL || col == NULL || region == NULL)
-			return false;
+			return true;
 
 		for (int i = 1; i <= col->getLastSymbIndx(); i++)
 		{
@@ -322,34 +322,43 @@ namespace sudoku
 				unsigned char offset = 3;
 				unsigned char reg1Idx = getRegionIdx(rowIdx, offset);
 				unsigned char reg2Idx = getRegionIdx(rowIdx, offset + m_iRegionDim);
-				Symbol ** symbolsR1 = m_pRegions[reg1Idx]->getSymbols();
-				Symbol ** symbolsR2 = m_pRegions[reg2Idx]->getSymbols();
-				unsigned char symbCountR1 = m_pRegions[reg1Idx]->getLastSymbIndx();
-				unsigned char symbCountR2 = m_pRegions[reg2Idx]->getLastSymbIndx();
-				Symbol * cur = NULL;
 
-				if (!state[rowIdx].firstRegionHandled)
+				if (m_pRegions[reg1Idx] != NULL)
 				{
-					for (int i = 0; i < symbCountR1; i++)
+					Symbol ** symbolsR1 = m_pRegions[reg1Idx]->getSymbols();
+					unsigned char symbCountR1 = m_pRegions[reg1Idx]->getLastSymbIndx();
+
+					Symbol * cur = NULL;
+
+					if (!state[rowIdx].firstRegionHandled)
 					{
-						cur = symbolsR1[i];
-						if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+						for (int i = 0; i < symbCountR1; i++)
 						{
-							state[rowIdx].firstRegionHandled = true;
-							return cur->getValue();
+							cur = symbolsR1[i];
+							if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+							{
+								state[rowIdx].firstRegionHandled = true;
+								return cur->getValue();
+							}
 						}
 					}
 				}
 
-				if (!state[rowIdx].secondRegionHandled)
+				if (m_pRegions[reg2Idx] != NULL)
 				{
-					for (int i = 0; i < symbCountR1; i++)
+					Symbol ** symbolsR2 = m_pRegions[reg2Idx]->getSymbols();
+					unsigned char symbCountR2 = m_pRegions[reg2Idx]->getLastSymbIndx();
+					Symbol * cur = NULL;
+					if (!state[rowIdx].secondRegionHandled)
 					{
-						cur = symbolsR2[i];
-						if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+						for (int i = 0; i < symbCountR2; i++)
 						{
-							state[rowIdx].secondRegionHandled = true;
-							return cur->getValue();
+							cur = symbolsR2[i];
+							if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+							{
+								state[rowIdx].secondRegionHandled = true;
+								return cur->getValue();
+							}
 						}
 					}
 				}
@@ -371,6 +380,7 @@ namespace sudoku
 			Symbol * cur = NULL;
 			for (int i = 0; i < symbCountC1; i++)
 			{
+				cur = symbolsC1[i];
 				if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
 				{
 					state[rowIdx].vertLineHandled = true;
