@@ -300,7 +300,18 @@ namespace sudoku
 	};
 
 
-
+	struct ParserState
+	{
+		ParserState()
+		{
+			firstRegionHandled = false;
+			secondRegionHandled = false;
+			vertLineHandled = false;
+		}
+		bool firstRegionHandled;
+		bool secondRegionHandled;
+		bool vertLineHandled;
+	};
 
 
 	class Parser
@@ -325,7 +336,7 @@ namespace sudoku
 		void init();
 		void cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount);
 		bool validate(char c, unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx);
-		char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &);
+		char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &, vector<ParserState> &);
 
 
 		set<char> * m_pSymbols;

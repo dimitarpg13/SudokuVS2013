@@ -300,11 +300,71 @@ namespace sudoku
 		return true;
 	}
 
+	
 
-	char Parser::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> & buffer)
+	char Parser::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> & buffer, vector<ParserState> & state)
 	{
 		char c = 0;
 				
+		
+		
+		if (colIdx < m_iRegionDim && (rowIdx + 1) % m_iDim != 0)
+		{
+			if (!state[rowIdx].firstRegionHandled || !state[rowIdx].secondRegionHandled)
+			{
+				// we are on a line exposed to the threat of "the two regions" so
+				// we should take measures not to fall into the two region's trap:
+				//
+				// in order to avoid this threat we need to make sure that after colIdx becomes larger than 2
+				// each of the remaining two regions which enclose the line does not contain the complement 
+				// of the symbol set already filled in the current row.
+
+				unsigned char offset = 3;
+				unsigned char reg1Idx = getRegionIdx(rowIdx, offset);
+				unsigned char reg2Idx = getRegionIdx(rowIdx, offset + m_iRegionDim);
+				Symbol ** symbolsR1 = m_pRegions[reg1Idx]->getSymbols();
+				Symbol ** symbolsR2 = m_pRegions[reg2Idx]->getSymbols();
+				unsigned char symbCountR1 = m_pRegions[reg1Idx]->getLastSymbIndx();
+				unsigned char symbCountR2 = m_pRegions[reg2Idx]->getLastSymbIndx();
+				Symbol * cur = NULL;
+
+				if (!state[rowIdx].firstRegionHandled)
+				{
+					for (int i = 0; i < symbCountR1; i++)
+					{
+						cur = symbolsR1[i];
+						if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+						{
+							state[rowIdx].firstRegionHandled = true;
+							return cur->getValue();
+						}
+					}
+				}
+
+				for (int i = 0; i < symbCountR1; i++)
+				{
+					cur = symbolsR2[i];
+					if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+					{
+						state[rowIdx].secondRegionHandled = true;
+						return cur->getValue();
+					}
+				}
+
+			}
+
+			
+		}
+
+		if (rowIdx > 0)
+		{
+			// we are on a line exposed to the threat of "the encroaching vertical line"
+			// and we should take measures not to fall into the vertical line's trap.
+			//
+			//
+
+		}
+
 		c = buffer.back();
 		buffer.pop_back();
 
@@ -337,6 +397,8 @@ namespace sudoku
 		HorizLine * curRow = NULL;
 		VertLine * curCol = NULL;
 		Region * curRegion = NULL;
+		vector<ParserState> state(m_iDim);
+
 		while (buffer.size() > 0)
 		{
 			
@@ -370,7 +432,7 @@ namespace sudoku
 			}
 
 			
-			c = nextChar(curRowIdx, curColIdx, curRegIdx, buffer);
+			c = nextChar(curRowIdx, curColIdx, curRegIdx, buffer, state);
 			
 
 			curSymbol = new Symbol(c, curRow, curCol, curRegion);
