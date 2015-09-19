@@ -71,6 +71,7 @@ namespace sudoku
 
 #ifdef _DEBUG
 		void print_row(vector<char> &);
+		void init_test_buffer(vector<char> &);
 #endif
 
 	};
