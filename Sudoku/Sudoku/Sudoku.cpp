@@ -308,7 +308,7 @@ namespace sudoku
 				
 		
 		
-		if (colIdx < m_iRegionDim && (rowIdx + 1) % m_iDim != 0)
+		if (rowIdx > 0 && colIdx < m_iRegionDim && (rowIdx + 1) % m_iDim != 0)
 		{
 			if (!state[rowIdx].firstRegionHandled || !state[rowIdx].secondRegionHandled)
 			{
@@ -341,13 +341,16 @@ namespace sudoku
 					}
 				}
 
-				for (int i = 0; i < symbCountR1; i++)
+				if (!state[rowIdx].secondRegionHandled)
 				{
-					cur = symbolsR2[i];
-					if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+					for (int i = 0; i < symbCountR1; i++)
 					{
-						state[rowIdx].secondRegionHandled = true;
-						return cur->getValue();
+						cur = symbolsR2[i];
+						if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+						{
+							state[rowIdx].secondRegionHandled = true;
+							return cur->getValue();
+						}
 					}
 				}
 
@@ -356,12 +359,24 @@ namespace sudoku
 			
 		}
 
-		if (rowIdx > 0)
+		if (rowIdx > 0 && !state[rowIdx].vertLineHandled)
 		{
 			// we are on a line exposed to the threat of "the encroaching vertical line"
 			// and we should take measures not to fall into the vertical line's trap.
 			//
 			//
+			unsigned char col1Idx = m_iDim - rowIdx;
+			Symbol ** symbolsC1 = m_pCols[col1Idx]->getSymbols();
+			unsigned char symbCountC1 = m_pCols[col1Idx]->getLastSymbIndx();
+			Symbol * cur = NULL;
+			for (int i = 0; i < symbCountC1; i++)
+			{
+				if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
+				{
+					state[rowIdx].vertLineHandled = true;
+					return cur->getValue();
+				}
+			}
 
 		}
 

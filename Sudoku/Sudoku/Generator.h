@@ -70,7 +70,7 @@ namespace sudoku
 		bool generate();
 
 #ifdef _DEBUG
-		void print_row(vector<unsigned char> &);
+		void print_row(vector<char> &);
 #endif
 
 	};

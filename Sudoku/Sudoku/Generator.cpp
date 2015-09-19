@@ -43,7 +43,7 @@ namespace sudoku
 	}
 
 #ifdef _DEBUG
-	void RGenerator::print_row(vector<unsigned char> & v)
+	void RGenerator::print_row(vector<char> & v)
 	{
 		cout << endl;
 		for (unsigned int i = 0; i < v.size(); i++)
