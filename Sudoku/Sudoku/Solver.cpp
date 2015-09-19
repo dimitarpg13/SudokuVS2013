@@ -489,11 +489,11 @@ namespace sudoku
           // false without registering an error condition. If I do that then example4
           // fails on the backtracking and returns unsolvable configuration error on
           // the 11317th iteration which means that another bug is lurking around
-          /*  else
+          else
             {
           	  if (curSymbol != s && s->getValue() == curSymbol->getValue())
         		  return false;
-            } */
+            } 
 
       }
 
@@ -601,9 +601,11 @@ namespace sudoku
          				 if (it == curAssignments->end())
          				 {
          				    curAssignments->push_back(s->getValue());
+							curSymbol->popLastRemoved();
+							
          				 }
 
-         				 curSymbol->popLastRemoved();
+						 
 
 
          			  }
@@ -723,8 +725,11 @@ namespace sudoku
 
 
 			   if (!curSymbol->isEmpty())
-			      curAssignments->push_back(curSymbol->getValue());
-			   curSymbol->setValue(0);
+			   {
+				   curAssignments->push_back(curSymbol->getValue());
+				   curSymbol->setValue(0);
+				   curSymbol->popLastRemoved();
+			   }
 			   // increment the fail count because the whole sequence after it failed so it is a failure for
 			   // the current symbol as well.
 			   curSymbol->incrementFailedCount();
@@ -752,7 +757,11 @@ namespace sudoku
 						curSymbol->setLastRemoved(curChar);
 
 						iterCount++;
+#ifdef _DEBUG
+						cout << "Iteration count : " << iterCount << endl;
 
+#endif
+	
 						res = update_assignments(curSymbol);
 
 
@@ -843,16 +852,16 @@ namespace sudoku
 					     {
 						    curSymbol->getAssignments()->push_back(curSymbol->getValue());
 					        curSymbol->setValue(0);
-					        //curNode->Val->first->popLastRemoved();
+					        curSymbol->popLastRemoved(); 
 					     }
 						   if (curSymbol->getAssignments()->size() > 1)
 								curSymbol->setCanChoose(true);
 
+						  
 
 						 curNode = curNode->Prev;
 
-
-
+				
 
 						 while ( curNode != NULL && (!curNode->Val->first->getCanChoose() || curNode->Val->first->getFailedCount() == curNode->Val->first->getAssignments()->size()))
 						 {
