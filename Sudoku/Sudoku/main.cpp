@@ -14,6 +14,7 @@
 
 #include "Sudoku.h"
 #include "Solver.h"
+#include "Generator.h"
 
 
 using namespace std;
@@ -23,6 +24,11 @@ using namespace sudoku;
 int _tmain(int argc, _TCHAR* argv[]) {
 	
 	cout << "SudokuQlik" << endl << endl; // prints SudokuQlik
+
+
+	/*Generator * g = new RGenerator(Puzzle::CLASSIC_SUDOKU_DIM, Puzzle::CLASSIC_SUDOKU_REGION_DIM);
+	
+	g->generate();*/
 
 
 	Puzzle * p = new Puzzle();
@@ -66,8 +72,9 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	delete s;
 	cout << endl << endl;
 
+	
 
-  /*  cout << "example2:" << endl;
+    cout << "example2:" << endl;
     p->load("example2.txt");
     s = new BTSolver(p);
     if (!s->solve())
@@ -87,7 +94,16 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 	if (!s->validate())
 	{
-		cout << "The solution is not unique!" << endl;
+	   cout << "The solution is not unique!" << endl;
+	}
+	else
+	{
+	   cout << endl << "This is unique solution." << endl;
+	}
+
+	if (s->getGrade() > 0)
+	{
+	   cout << "The grade of the puzzle is : " << s->getGrade() << endl;
 	}
 
     cout << endl << "The solution for example2 is:" << endl;
@@ -113,10 +129,19 @@ int _tmain(int argc, _TCHAR* argv[]) {
        }
    }
 
-   if (!s->validate())
-   {
-	  cout << "The solution is not unique!" << endl;
-   }
+	if (!s->validate())
+	{
+		cout << "The solution is not unique!" << endl;
+	}
+	else
+	{
+		cout << endl << "This is unique solution." << endl;
+	}
+
+	if (s->getGrade() > 0)
+	{
+		cout << "The grade of the puzzle is : " << s->getGrade() << endl;
+	}
 
    cout << endl << "The solution for example3 is:" << endl;
    s->printToConsole();
@@ -146,12 +171,21 @@ int _tmain(int argc, _TCHAR* argv[]) {
    {
 	   cout << "The solution is not unique!" << endl;
    }
+   else
+   {
+	   cout << endl << "This is unique solution." << endl;
+   }
+
+   if (s->getGrade() > 0)
+   {
+	   cout << "The grade of the puzzle is : " << s->getGrade() << endl;
+   }
 
    cout << endl << "The solution for example4 is:" << endl;
    s->printToConsole();
 
    delete s;
-   cout << endl << endl*/;
+   cout << endl << endl;
    
 
 
