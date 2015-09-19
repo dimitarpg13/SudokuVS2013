@@ -59,6 +59,12 @@ namespace sudoku
 
 	bool RGenerator::generate()
 	{
+		if (m_iDim != Puzzle::CLASSIC_SUDOKU_DIM || m_iRegionDim != Puzzle::CLASSIC_SUDOKU_REGION_DIM)
+		{
+			m_lError |= SUDOKU_ERROR_FEATURE_NOT_IMPLEMENTED;
+			return false;
+		}
+
 		bool res = true;
 
 		vector<char> buffer;

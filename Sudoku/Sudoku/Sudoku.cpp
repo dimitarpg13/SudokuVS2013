@@ -262,8 +262,13 @@ namespace sudoku
 		return res;
 	}
 
-	bool Parser::validate(char c, HorizLine * row, VertLine * col, Region * region)
+	bool Parser::validate(char c, unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx)
 	{
+
+		HorizLine * row = m_pRows[rowIdx];
+		VertLine * col = m_pCols[colIdx];
+		Region * region = m_pRegions[regIdx];
+
 		if (row == NULL || col == NULL || region == NULL)
 			return false;
 
@@ -299,16 +304,12 @@ namespace sudoku
 	char Parser::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> & buffer)
 	{
 		char c = 0;
-		
-		HorizLine * curRow = m_pRows[rowIdx];
-		VertLine * curCol = m_pCols[colIdx];
-		Region * curRegion = m_pRegions[regIdx];
-
+				
 		c = buffer.back();
 		buffer.pop_back();
 
 		int k = 0;
-		while (!validate(c, curRow, curCol, curRegion))
+		while (!validate(c, rowIdx, colIdx, regIdx))
 		{
 			c = symbolTable[k++ % m_iDim];
 		}
