@@ -164,6 +164,17 @@ namespace sudoku
 				return false;
 		}
 
+		bool removeSymbol(unsigned char idx)
+		{
+			if (idx < m_iLastSymbolIdx)
+			{
+				m_pSymbols[idx] = NULL;
+				return true;
+			}
+			else
+				return false;
+		}
+
 		bool addRegion(Region* region)
 		{
 			if (m_iLastRegionIdx < m_iRegionCount)
@@ -265,6 +276,18 @@ namespace sudoku
 			return true;
 		}
 
+		bool removeSymbol(unsigned char idx)
+		{
+			if (idx < m_iLastSymbolIdx)
+			{
+				m_pSymbols[idx] = NULL;
+			}
+			else
+				return false;
+
+			return true;
+		}
+
 		bool addRow(HorizLine * row)
 		{
 			if (m_iLastRowIdx < m_iRegionDim)
@@ -296,7 +319,7 @@ namespace sudoku
 
 		unsigned char m_iLastSymbolIdx;
 		unsigned char m_iLastRowIdx;
-		unsigned char m_iLastColIdx;
+		unsigned char m_iLastColIdx;		
 	};
 
 
@@ -307,10 +330,19 @@ namespace sudoku
 			firstRegionHandled = false;
 			secondRegionHandled = false;
 			vertLineHandled = false;
+			usedAlready = 0;
 		}
 		bool firstRegionHandled;
 		bool secondRegionHandled;
 		bool vertLineHandled;
+		char usedAlready;
+		void clear() 
+		{
+			firstRegionHandled = false;
+			secondRegionHandled = false;
+			vertLineHandled = false;
+			usedAlready = 0;
+		}
 	};
 
 
@@ -328,6 +360,7 @@ namespace sudoku
 		long long getError() { return m_lError; }
 		const set<char> * getSymbolTable() { return m_pSymbols; }
 		unsigned char getRegionIdx(unsigned char rowIdx, unsigned char colIdx);
+	
 		static char symbolTable[];
 	private:
 		bool is_symbol(char c);
@@ -337,7 +370,7 @@ namespace sudoku
 		void cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount);
 		bool validate(char c, unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx);
 		char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &, vector<ParserState> &);
-
+		unsigned char getInRegionSeqIdx(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx);
 
 		set<char> * m_pSymbols;
 		unsigned char m_iDim, m_iRegionDim;

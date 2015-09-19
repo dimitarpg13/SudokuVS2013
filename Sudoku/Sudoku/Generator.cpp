@@ -170,9 +170,14 @@ namespace sudoku
 
 		vector<char> buffer;
 		int n = m_iDim * m_iDim;
-		//fillRandom(buffer, n);
+
+#ifdef _DEBUG
 		init_test_buffer(buffer);
-		
+#else
+		fillRandom(buffer, n);
+#endif
+
+
 #ifdef _DEBUG
 		print_row(buffer);
 #endif
