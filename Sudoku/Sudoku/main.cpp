@@ -118,7 +118,7 @@ void test_solver()
 				cout << endl << "Inconsistent internal state!!!" << endl;
 			}
 		}
-	}
+	} 
 
 	if (!s->validate())
 	{
@@ -177,9 +177,7 @@ void test_solver()
 
 	delete s;
 	cout << endl << endl;
-
-
-
+	
 
 	delete p;
 
