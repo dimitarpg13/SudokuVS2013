@@ -58,7 +58,39 @@ namespace sudoku
 	}
 
 
-	
+	Generator::~Generator()
+	{
+
+		if (m_pRows != NULL)
+		{
+			for (int i = 0; i < m_iDim; i++)
+				if (m_pRows[i] != NULL)
+					delete m_pRows[i];
+			delete[] m_pRows;
+		}
+
+		if (m_pCols != NULL)
+		{
+			for (int i = 0; i < m_iDim; i++)
+				if (m_pCols[i] != NULL)
+					delete m_pCols[i];
+			delete[] m_pCols;
+		}
+
+		if (m_pRegions != NULL)
+		{
+			for (int i = 0; i < m_iDim; i++)
+				if (m_pRegions[i] != NULL)
+					delete m_pRegions[i];
+			delete[] m_pRegions;
+		}
+
+		if (m_pPuzzle != NULL)
+			delete m_pPuzzle;
+
+		if (m_pSol != NULL)
+			delete m_pSol;
+	}
 
 	void RGenerator::init()
 	{
@@ -78,6 +110,8 @@ namespace sudoku
 
 	void RGenerator::cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount)
 	{
+	
+
 		if (m_pRows != NULL)
 		{
 			for (unsigned short i = 0; i < rowCount; i++)
@@ -313,8 +347,10 @@ namespace sudoku
 	}
 
 
-	bool RGenerator::generate()
+	bool RGenerator::generate(int grade)
 	{
+		m_iGrade = grade;
+
 		if (m_iDim != Puzzle::CLASSIC_SUDOKU_DIM || m_iRegionDim != Puzzle::CLASSIC_SUDOKU_REGION_DIM)
 		{
 			m_lError |= SUDOKU_ERROR_FEATURE_NOT_IMPLEMENTED;
@@ -453,9 +489,73 @@ namespace sudoku
 		
 		}
 
+
+		make_puzzle();
+
 		return res;
 	}
 
+
+	bool RGenerator::make_puzzle()
+	{
+
+		bool res = true;
+		Solver * solver = NULL;	
+		int curGrade = -1;
+		bool unique = false;
+		
+		m_pSol = new Puzzle(m_iDim, m_iRegionDim, m_pRows, m_pCols, m_pRegions);
+		m_pPuzzle = m_pSol->getCopy();
+		for (int curIter = 0; curIter < m_iDim; curIter++)
+		{
+			vector<char> buffer;
+			fillRandom(buffer, m_iDim);
+			unsigned char colIdx = 0;
+			vector<pair<unsigned char,char>> stack;
+			char c;
+			for (int rowIdx = 0; rowIdx < m_iDim; rowIdx++)
+			{
+				colIdx = buffer.back() - '1';
+				buffer.pop_back();
+				c = m_pPuzzle->getRows()[rowIdx]->getSymbols()[colIdx]->getValue();
+				stack.push_back(pair<unsigned char, char>(colIdx,c));
+			    m_pPuzzle->getRows()[rowIdx]->getSymbols()[colIdx]->setValue(0);
+			
+			}
+			
+			solver = new BTSolver(m_pPuzzle);
+			res = solver->solve();
+			if (!res)
+			{
+				m_lError |= solver->getError();
+				return false;
+			}
+
+			curGrade = solver->getGrade();
+			unique = solver->validate();
+			if (!unique)
+			{
+				// undo the last iteration
+				unsigned char colIdx = 0;
+				for (unsigned char rowIdx = 0; rowIdx < m_iDim; rowIdx++)
+				{
+					colIdx = stack[rowIdx].first;
+					c = stack[rowIdx].second;
+					m_pPuzzle->getRows()[rowIdx]->getSymbols()[colIdx]->setValue(c);
+				}
+			}
+
+			delete solver;
+
+			if (curGrade == m_iGrade)
+				break;
+			
+		}
+
+	
+
+		return res;
+	}
 
 	void RGenerator::printToConsole()
 	{

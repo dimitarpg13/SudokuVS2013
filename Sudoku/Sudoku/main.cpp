@@ -187,8 +187,29 @@ void test_generator()
 {
 	Generator * g = new RGenerator(Puzzle::CLASSIC_SUDOKU_DIM, Puzzle::CLASSIC_SUDOKU_REGION_DIM);
 
-	g->generate();
+	g->generate(1);
 
+	if (g->getError() > 0)
+	{
+		if (g->getError() & SUDOKU_ERROR_PUZZLE_GENERATION_FROM_RANDOM_INPUT)
+		{
+			cout << endl << "Error in the puzzle generation from random input!!!" << endl;
+		}
+		else if (g->getError() & SUDOKU_ERROR_UNSOLVABLE_CONFIGURATION)
+		{
+			cout << endl << "Unsolvable configuration!!!" << endl;
+		}
+		else if (g->getError() & SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE)
+		{
+			cout << endl << "Inconsistent internal state!!!" << endl;
+		}
+	}
+	cout << "The puzzle is " << endl;
+
+
+	g->getPuzzle()->printToConsole();
+
+	cout << "The Solution is: " << endl;
 	g->printToConsole();
 	
 
