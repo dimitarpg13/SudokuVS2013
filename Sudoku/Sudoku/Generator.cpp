@@ -508,6 +508,7 @@ namespace sudoku
 		m_pSol = new Puzzle(m_iDim, m_iRegionDim, m_pRows, m_pCols, m_pRegions);
 		m_pPuzzle = m_pSol->getCopy();
 		int curIter = 0;
+			
 		for (curIter = 0; curIter < MAX_ITERATION_COUNT; curIter++)
 		{
 			
@@ -556,9 +557,42 @@ namespace sudoku
 
 			delete solver;
 
-			if (curGrade == m_iGrade)
-				break;
-			
+			if (m_iGrade != 1)
+			{
+				if (curGrade == m_iGrade)
+					break;
+			}
+			else
+			{
+				// we do not want to pick the trivial easy problems - select that one 
+				// which is just one iteration before becoming moderate
+				if (curGrade == 2)
+				{
+					// undo the last iteration
+					unsigned char colIdx = 0;
+					for (unsigned char rowIdx = 0; rowIdx < m_iDim; rowIdx++)
+					{
+						colIdx = stack[rowIdx].first;
+						c = stack[rowIdx].second;
+						m_pPuzzle->getRows()[rowIdx]->getSymbols()[colIdx]->setValue(c);
+					}
+
+					solver = new BTSolver(m_pPuzzle);
+					res = solver->solve();
+					curGrade = solver->getGrade();
+					unique = solver->validate();
+					if (curGrade != 1 || !unique)
+					{
+						m_lError |= SUDOKU_ERROR_PUZZLE_GENERATION_FROM_RANDOM_INPUT;
+						delete solver;
+						return false;
+					}
+
+					break;
+				}
+			}
+
+
 		}
 
 		if (curIter < MAX_ITERATION_COUNT)
