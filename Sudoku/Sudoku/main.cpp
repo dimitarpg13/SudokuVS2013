@@ -187,7 +187,7 @@ void test_generator()
 {
 	Generator * g = new RGenerator(Puzzle::CLASSIC_SUDOKU_DIM, Puzzle::CLASSIC_SUDOKU_REGION_DIM);
 
-	g->generate(1);
+	g->generate(4);
 
 	if (g->getError() > 0)
 	{
@@ -209,9 +209,85 @@ void test_generator()
 
 	g->getPuzzle()->printToConsole();
 
-	cout << "The Solution is: " << endl;
+	cout << endl << "The Solution is: " << endl;
 	g->printToConsole();
 	
+
+}
+
+
+void generate(int grade)
+{
+	Generator * g = new RGenerator(Puzzle::CLASSIC_SUDOKU_DIM, Puzzle::CLASSIC_SUDOKU_REGION_DIM);
+
+	g->generate(grade);
+
+	if (g->getError() > 0)
+	{
+		if (g->getError() & SUDOKU_ERROR_PUZZLE_GENERATION_FROM_RANDOM_INPUT)
+		{
+			cout << endl << "Error in the puzzle generation from random input!!!" << endl;
+		}
+		else if (g->getError() & SUDOKU_ERROR_UNSOLVABLE_CONFIGURATION)
+		{
+			cout << endl << "Unsolvable configuration!!!" << endl;
+		}
+		else if (g->getError() & SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE)
+		{
+			cout << endl << "Inconsistent internal state!!!" << endl;
+		}
+	}
+	cout << "The puzzle is " << endl;
+
+
+	g->getPuzzle()->printToConsole();
+
+	cout << endl << "The Solution is: " << endl;
+	g->printToConsole();
+}
+
+void solver(string fileName)
+{
+	Puzzle * p = new Puzzle();
+	Solver * s = NULL;
+
+	cout << fileName << ":" << endl;
+	p->load(fileName);
+	s = new BTSolver(p);
+	if (!s->solve())
+	{
+		if (s->getError() > 0)
+		{
+			if (s->getError() & SUDOKU_ERROR_UNSOLVABLE_CONFIGURATION)
+			{
+				cout << endl << "Unsolvable configuration!!!" << endl;
+			}
+			else if (s->getError() & SUDOKU_ERROR_INCONSISTENT_INTERNAL_STATE)
+			{
+				cout << endl << "Inconsistent internal state!!!" << endl;
+			}
+		}
+	}
+
+	if (!s->validate())
+	{
+		cout << "The solution is not unique!" << endl;
+	}
+	else
+	{
+		cout << endl << "This is unique solution." << endl;
+	}
+
+	if (s->getGrade() > 0)
+	{
+
+		cout << "The grade of the puzzle is : " << s->getGrade() << endl;
+	}
+
+	cout << endl << "The solution for example1 is:" << endl;
+	s->printToConsole();
+	delete s;
+	cout << endl << endl;
 
 }
 

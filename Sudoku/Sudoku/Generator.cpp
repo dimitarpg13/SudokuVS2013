@@ -314,7 +314,8 @@ namespace sudoku
 		vector<char> buffer;
 	
 #ifdef _DEBUG
-		init_test_buffer(buffer);
+		//init_test_buffer(buffer);
+		fillRandom(buffer, m_iDim);
 #else
 		fillRandom(buffer, m_iDim);	
 #endif
@@ -506,8 +507,9 @@ namespace sudoku
 		
 		m_pSol = new Puzzle(m_iDim, m_iRegionDim, m_pRows, m_pCols, m_pRegions);
 		m_pPuzzle = m_pSol->getCopy();
-		for (int curIter = 0; curIter < m_iDim; curIter++)
+		for (int curIter = 0; curIter < 100; curIter++)
 		{
+			
 			vector<char> buffer;
 			fillRandom(buffer, m_iDim);
 			unsigned char colIdx = 0;
@@ -523,6 +525,12 @@ namespace sudoku
 			
 			}
 			
+#ifdef _DEBUG
+			cout << endl << endl << "The puzzle on " << curIter + 1 << "th iteration: " << endl << endl;
+			m_pPuzzle->printToConsole();
+			cout << endl;
+#endif
+
 			solver = new BTSolver(m_pPuzzle);
 			res = solver->solve();
 			if (!res)
