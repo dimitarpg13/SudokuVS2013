@@ -758,7 +758,7 @@ namespace sudoku
 
 						m_iIterCount++;
 #ifdef _DEBUG
-						cout << "Iteration count : " << iterCount << endl;
+						cout << "Iteration count : " << m_iIterCount << endl;
 
 #endif
 	
