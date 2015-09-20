@@ -36,14 +36,13 @@ namespace sudoku
 
 	public:
 	
-		Generator(unsigned char dim, unsigned char regionDim) : m_iDim(dim), m_iRegionDim(regionDim)
-		{
-
-		}
-			
+	
+		
+		static char symbolTable[];
 
 		virtual bool generate() = 0;
 
+		virtual void printToConsole() = 0;
 
 	};
 
@@ -56,8 +55,10 @@ namespace sudoku
 		void fillRandom(vector<char> &, int);
 	public:
 	
-		RGenerator(unsigned char dim, unsigned char regionDim) : Generator(dim, regionDim)
+		RGenerator(unsigned char dim, unsigned char regionDim) 
 		{
+			m_iDim = dim;
+			m_iRegionDim = regionDim;
 			m_pSrc = new Puzzle(dim, regionDim);
 
 		}
@@ -68,6 +69,33 @@ namespace sudoku
 		}
 
 		bool generate();
+
+		bool parse(vector<char>& buffer);
+	
+		HorizLine ** getRows() { return m_pRows; }
+		VertLine **  getCols() { return m_pCols; }
+		Region ** getRegions() { return m_pRegions; }
+		long long getError() { return m_lError; }
+		const set<char> * getSymbolTable() { return m_pSymbols; }
+		unsigned char getRegionIdx(unsigned char rowIdx, unsigned char colIdx);
+		void printToConsole();
+		
+	private:
+	
+		void init();
+		void cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount);
+		bool validate(char c, unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx);
+		char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &, vector<ParserState> &);
+		unsigned char getInRegionSeqIdx(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx);
+
+		set<char> * m_pSymbols;
+		unsigned char m_iDim, m_iRegionDim;
+		char m_cSep;
+		char m_cEol;
+		long long m_lError;
+		HorizLine ** m_pRows;
+		VertLine ** m_pCols;
+		Region ** m_pRegions;
 
 #ifdef _DEBUG
 		void print_row(vector<char> &);

@@ -188,6 +188,8 @@ void test_generator()
 	Generator * g = new RGenerator(Puzzle::CLASSIC_SUDOKU_DIM, Puzzle::CLASSIC_SUDOKU_REGION_DIM);
 
 	g->generate();
+
+	g->printToConsole();
 	
 
 }
