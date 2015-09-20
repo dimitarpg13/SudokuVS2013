@@ -258,11 +258,10 @@ void generate(int grade)
 
 	cout << endl << "The Solution is: " << endl;
 
-	cout << "The maximum iteration count of " << Generator::MAX_ITERATION_COUNT << " was exceeded and puzzled with the desired grade was not found!" << endl;
 	g->printToConsole();
 }
 
-void solver(string fileName)
+void solve(string fileName)
 {
 	Puzzle * p = new Puzzle();
 	Solver * s = NULL;
@@ -313,15 +312,51 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	
 	cout << "SudokuQlik" << endl << endl; // prints SudokuQlik
 
-	test_generator();
+	//test_generator();
 
 	//test_solver();
 
+	cout << "\t\t\t\tMENU:" << endl << endl << endl << endl;
+	cout << "\t\t1 - solve puzzle" << endl << endl;
+	cout << "\t\t2 - generate a puzzle" << endl << endl;
+	cout << "\t\t3 - exit the program" << endl << endl;
+	int i;
+	
+	while (1)
+	{
+		cin >> i;
 
+		if (i == 1)
+		{
+			cout << "Enter a text file name: " << endl;
+			string fileName;
+			cin >> fileName;
+			solve(fileName);
 
+		}
+		else if (i == 2)
+		{
+			cout << "Enter the desired puzzle grade: " << endl;
+			int grade;
+			cin >> grade;
+			while (1)
+			{
+				if (grade != 1 && grade != 2 && grade != 3 && grade != 4)
+					cout << endl << endl << "Incorrect choise.. try again" << endl;
+				else
+					break;
+			}
+			generate(grade);
 
+		}
+		else if (i == 3)
+		{
+			break;
+		}
+		else
+			cout << endl << endl << "Incorrect choise.. try again" << endl;
+	}
 
-
-
+	
 	return 0;
 }
