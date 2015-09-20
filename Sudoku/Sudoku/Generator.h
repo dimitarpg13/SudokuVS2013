@@ -48,7 +48,7 @@ namespace sudoku
 
 		Puzzle * getPuzzle() { return m_pPuzzle;  }
 		long long getError() { return m_lError;  }
-
+		const static int MAX_ITERATION_COUNT = 10000;
 
 	};
 

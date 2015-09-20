@@ -507,7 +507,8 @@ namespace sudoku
 		
 		m_pSol = new Puzzle(m_iDim, m_iRegionDim, m_pRows, m_pCols, m_pRegions);
 		m_pPuzzle = m_pSol->getCopy();
-		for (int curIter = 0; curIter < 100; curIter++)
+		int curIter = 0;
+		for (curIter = 0; curIter < MAX_ITERATION_COUNT; curIter++)
 		{
 			
 			vector<char> buffer;
@@ -525,11 +526,11 @@ namespace sudoku
 			
 			}
 			
-#ifdef _DEBUG
+//#ifdef _DEBUG
 			cout << endl << endl << "The puzzle on " << curIter + 1 << "th iteration: " << endl << endl;
 			m_pPuzzle->printToConsole();
 			cout << endl;
-#endif
+//#endif
 
 			solver = new BTSolver(m_pPuzzle);
 			res = solver->solve();
@@ -560,9 +561,14 @@ namespace sudoku
 			
 		}
 
+		if (curIter < MAX_ITERATION_COUNT)
+			return true;
+		else
+		{
+			m_lError |= SUDOKU_ERROR_PUZZLE_GENERATION_ITER_COUNT_EXCEEDED;
+			return false;
+		}
 	
-
-		return res;
 	}
 
 	void RGenerator::printToConsole()

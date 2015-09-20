@@ -685,7 +685,7 @@ namespace sudoku
 
   bool BTSolver::solve_internal(RankNode * head)
   {
-	  int iterCount=0;
+	  m_iIterCount=0;
 
 	  bool res = true;
 
@@ -756,7 +756,7 @@ namespace sudoku
 						curSymbol->setValue(curChar);
 						curSymbol->setLastRemoved(curChar);
 
-						iterCount++;
+						m_iIterCount++;
 #ifdef _DEBUG
 						cout << "Iteration count : " << iterCount << endl;
 
@@ -972,7 +972,9 @@ namespace sudoku
 
 	  }
 
-	  cout << endl << "Total iteration count: " << iterCount << endl << endl;
+#ifdef _DEBUG
+	  cout << endl << "Total iteration count: " << m_iIterCount << endl << endl;
+#endif
 
 	  return res;
 

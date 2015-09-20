@@ -28,6 +28,7 @@ namespace sudoku
 		Puzzle * m_pSol; // to obtain the solution using depth-first search
 		int m_iGrade;
 		long long m_lError;
+		int m_iIterCount;
 
 	public:
 		HorizLine ** const getRows()
@@ -69,6 +70,8 @@ namespace sudoku
 		}
 
 		long long getError() { return m_lError; }
+
+		int getIterCount() { return m_iIterCount;  }
 
 		// return values: 1 - Easy, 2 - Medium, 3 - Hard, 4 - Samurai
 		int getGrade() { return m_iGrade;  }

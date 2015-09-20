@@ -43,6 +43,8 @@ void test_solver()
 		}
 	}
 
+	cout << "Total iteration count : " << s->getIterCount() << endl;
+
 	if (!s->validate())
 	{
 		cout << "The solution is not unique!" << endl;
@@ -83,6 +85,7 @@ void test_solver()
 		}
 	}
 
+	cout << "Total iteration count : " << s->getIterCount() << endl;
 	if (!s->validate())
 	{
 		cout << "The solution is not unique!" << endl;
@@ -119,6 +122,8 @@ void test_solver()
 			}
 		}
 	} 
+
+	cout << "Total iteration count : " << s->getIterCount() << endl;
 
 	if (!s->validate())
 	{
@@ -157,6 +162,8 @@ void test_solver()
 			}
 		}
 	}
+
+	cout << "Total iteration count : " << s->getIterCount() << endl;
 
 	if (!s->validate())
 	{
@@ -236,13 +243,22 @@ void generate(int grade)
 		{
 			cout << endl << "Inconsistent internal state!!!" << endl;
 		}
+		else if (g->getError() & SUDOKU_ERROR_PUZZLE_GENERATION_ITER_COUNT_EXCEEDED)
+		{
+			cout << "The maximum iteration count of " << Generator::MAX_ITERATION_COUNT << " was exceeded and puzzled with the desired grade was not found!" << endl;
+		}
+
 	}
-	cout << "The puzzle is " << endl;
 
-
-	g->getPuzzle()->printToConsole();
+	if (!(g->getError() & SUDOKU_ERROR_PUZZLE_GENERATION_ITER_COUNT_EXCEEDED))
+	{
+		cout << "The puzzle is " << endl;
+		g->getPuzzle()->printToConsole();
+	}
 
 	cout << endl << "The Solution is: " << endl;
+
+	cout << "The maximum iteration count of " << Generator::MAX_ITERATION_COUNT << " was exceeded and puzzled with the desired grade was not found!" << endl;
 	g->printToConsole();
 }
 
@@ -268,6 +284,8 @@ void solver(string fileName)
 			}
 		}
 	}
+
+	cout << "Total iteration count : " << s->getIterCount() << endl;
 
 	if (!s->validate())
 	{
@@ -295,9 +313,9 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	
 	cout << "SudokuQlik" << endl << endl; // prints SudokuQlik
 
-	//test_generator();
+	test_generator();
 
-	test_solver();
+	//test_solver();
 
 
 
