@@ -186,6 +186,18 @@ namespace sudoku
 			else
 				return false;
 		}
+
+		bool removeLastRegion()
+		{
+			if (m_iLastRegionIdx < m_iRegionCount)
+			{
+				m_pRegions[--m_iLastRegionIdx] = NULL;
+				return true;
+			}
+			else
+				return false;
+		}
+
 	};
 
 	class HorizLine : public Line
@@ -243,6 +255,15 @@ namespace sudoku
 			m_pSymbols = new Symbol*[m_iSymbCount]; // the number of symbols in single region
 			m_pRows = new HorizLine*[m_iRegionDim];
 			m_pCols = new VertLine*[m_iRegionDim];
+
+			for (int i = 0; i < m_iSymbCount; i++)
+				m_pSymbols[i] = NULL;
+
+			for (int i = 0; i < m_iRegionDim; i++)
+			{
+				m_pRows[i] = NULL;
+				m_pCols[i] = NULL;
+			}
 		};
 
 		unsigned char getDim() { return m_iDim; };
@@ -299,10 +320,30 @@ namespace sudoku
 			return true;
 		}
 
+		bool removeLastRow()
+		{
+			if (m_iLastRowIdx < m_iRegionDim)
+				m_pRows[--m_iLastRowIdx] = NULL;
+			else
+				return false;
+
+			return true;
+		}
+
 		bool addCol(VertLine * col)
 		{
 			if (m_iLastColIdx < m_iRegionDim)
 				m_pCols[m_iLastColIdx++] = col;
+			else
+				return false;
+
+			return true;
+		}
+
+		bool removeLastCol()
+		{
+			if (m_iLastColIdx < m_iRegionDim)
+				m_pCols[--m_iLastColIdx] = NULL;
 			else
 				return false;
 

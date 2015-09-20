@@ -70,7 +70,7 @@ namespace sudoku
 
 		bool generate();
 
-		bool parse(vector<char>& buffer);
+		
 	
 		HorizLine ** getRows() { return m_pRows; }
 		VertLine **  getCols() { return m_pCols; }
@@ -85,7 +85,7 @@ namespace sudoku
 		void init();
 		void cleanup(unsigned char rowCount, unsigned char colCount, unsigned char regCount);
 		bool validate(char c, unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx);
-		char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> &, vector<ParserState> &);
+		char nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<ParserState> &);
 		unsigned char getInRegionSeqIdx(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx);
 
 		set<char> * m_pSymbols;

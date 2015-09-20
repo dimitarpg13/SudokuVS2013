@@ -57,155 +57,8 @@ namespace sudoku
 
 	}
 
-#ifdef _DEBUG
-	void RGenerator::print_row(vector<char> & v)
-	{
-		cout << endl;
-		for (unsigned int i = 0; i < v.size(); i++)
-		{
-			cout << v[i] << " ";
-			if (i > 0 && (i+1) % m_iDim == 0)
-				cout << endl;
-		}
-		cout << endl;
 
-	}
-
-	// pseudo random input for testing purposes
-	void RGenerator::init_test_buffer(vector<char> & v)
-	{
-		v.clear();
-		v.push_back('5');
-		v.push_back('6');
-		v.push_back('5');
-		v.push_back('6');
-		v.push_back('2');
-		v.push_back('9');
-		v.push_back('4');
-		v.push_back('3');
-		v.push_back('1');
-
-		v.push_back('5');
-		v.push_back('9');
-		v.push_back('2');
-		v.push_back('4');
-		v.push_back('9');
-		v.push_back('7');
-		v.push_back('5');
-		v.push_back('6');
-		v.push_back('4');
-
-		v.push_back('3');
-		v.push_back('5');
-		v.push_back('3');
-		v.push_back('7');
-		v.push_back('3');
-		v.push_back('4');
-		v.push_back('1');
-		v.push_back('2');
-		v.push_back('8');
-
-		v.push_back('7');
-		v.push_back('1');
-		v.push_back('6');
-		v.push_back('8');
-		v.push_back('3');
-		v.push_back('8');
-		v.push_back('4');
-		v.push_back('6');
-		v.push_back('5');
-
-		v.push_back('3');
-		v.push_back('8');
-		v.push_back('1');
-		v.push_back('4');
-		v.push_back('7');
-		v.push_back('9');
-		v.push_back('7');
-		v.push_back('6');
-		v.push_back('9');
-
-		v.push_back('4');
-		v.push_back('2');
-		v.push_back('4');
-		v.push_back('2');
-		v.push_back('2');
-		v.push_back('5');
-		v.push_back('4');
-		v.push_back('6');
-		v.push_back('2');
-
-		v.push_back('2');
-		v.push_back('3');
-		v.push_back('7');
-		v.push_back('7');
-		v.push_back('6');
-		v.push_back('2');
-		v.push_back('5');
-		v.push_back('1');
-		v.push_back('1');
-
-		v.push_back('8');
-		v.push_back('8');
-		v.push_back('3');
-		v.push_back('9');
-		v.push_back('5');
-		v.push_back('6');
-		v.push_back('1');
-		v.push_back('8');
-		v.push_back('8');
-
-		v.push_back('2');
-		v.push_back('3');
-		v.push_back('5');
-		v.push_back('4');
-		v.push_back('1');
-		v.push_back('3');
-		v.push_back('7');
-		v.push_back('6');
-		v.push_back('3');
-
-
-
-	}
-
-#endif
-
-
-
-	bool RGenerator::generate()
-	{
-		if (m_iDim != Puzzle::CLASSIC_SUDOKU_DIM || m_iRegionDim != Puzzle::CLASSIC_SUDOKU_REGION_DIM)
-		{
-			m_lError |= SUDOKU_ERROR_FEATURE_NOT_IMPLEMENTED;
-			return false;
-		}
-
-		bool res = true;
-
-		vector<char> buffer;
-		int n = m_iDim * m_iDim ;
-
-#ifdef _DEBUG
-		init_test_buffer(buffer);
-		//fillRandom(buffer, n);
-#else
-		fillRandom(buffer, n);
-#endif
-
-
-#ifdef _DEBUG
-		print_row(buffer);
-#endif
-
-		parse(buffer);
 	
-		m_pSrc->printToConsole();
-
-
-
-		return res;
-	}
 
 	void RGenerator::init()
 	{
@@ -323,7 +176,7 @@ namespace sudoku
 
 
 
-	char RGenerator::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<char> & buffer, vector<ParserState> & state)
+	char RGenerator::nextChar(unsigned char rowIdx, unsigned char colIdx, unsigned char regIdx, vector<ParserState> & state)
 	{
 		char c = 0;
 
@@ -423,14 +276,30 @@ namespace sudoku
 
 		}
 
+		
+		vector<char> buffer;
+	
+#ifdef _DEBUG
+		init_test_buffer(buffer);
+#else
+		fillRandom(buffer, m_iDim);	
+#endif
 		c = buffer.back();
 		buffer.pop_back();
 
 		int k = 0, count = 0;
 		while (!validate(c, rowIdx, colIdx, regIdx) || state[rowIdx].isUsedAlready(colIdx, c))
 		{
-			c = symbolTable[k++ % m_iDim];
-			count++;
+			if (buffer.size() > 0)
+			{
+				c = buffer.back();
+				buffer.pop_back();
+			}
+			else
+			{
+				c = symbolTable[k++ % m_iDim];
+				count++;
+			}
 
 			if (count >= m_iDim + 1)
 			{
@@ -443,15 +312,16 @@ namespace sudoku
 		return c;
 	}
 
-	bool RGenerator::parse(vector<char>& buffer)
+
+	bool RGenerator::generate()
 	{
-		bool res = true;
-		unsigned int n = m_iDim * m_iDim;
-		if (buffer.size() < n)
+		if (m_iDim != Puzzle::CLASSIC_SUDOKU_DIM || m_iRegionDim != Puzzle::CLASSIC_SUDOKU_REGION_DIM)
 		{
-			m_lError |= SUDOKU_ERROR_INCORRECT_INPUT_FORMAT;
+			m_lError |= SUDOKU_ERROR_FEATURE_NOT_IMPLEMENTED;
 			return false;
 		}
+
+		bool res = true;
 
 		init();
 
@@ -464,9 +334,9 @@ namespace sudoku
 		Region * curRegion = NULL;
 		vector<ParserState> state(m_iDim);
 
-		while (buffer.size() > 0)
+		while (curRowIdx < m_iDim)
 		{
-
+			curRow = m_pRows[curRowIdx];
 
 			if (curRow == NULL)
 			{
@@ -498,20 +368,29 @@ namespace sudoku
 				m_pRegions[curRegIdx] = curRegion;
 			}
 
+		
 
-			while ((c = nextChar(curRowIdx, curColIdx, curRegIdx, buffer, state)) == 0)
+			while ((c = nextChar(curRowIdx, curColIdx, curRegIdx, state)) == 0)
 			{
 				// backtrack until it is necessary
 				//
 				//
 				if (curColIdx > 0)
 				{
-					//state[curRowIdx].clear(curColIdx);
+					//if (curColIdx % m_iRegionDim == 0)
+					//	curRow->removeLastRegion();
+
+					if (curColIdx + 1 < m_iDim)
+					   state[curRowIdx].clear(curColIdx+ 1);
 					curColIdx--;
 				}
 				else
 				{
 					state[curRowIdx].clear();
+					//if (curRowIdx % m_iRegionDim == 0)
+					//	curCol->removeLastRegion();
+
+			
 					curRowIdx--;
 					curColIdx = m_iDim - 1;
 
@@ -529,6 +408,8 @@ namespace sudoku
 				unsigned char seqIdx = getInRegionSeqIdx(curRowIdx, curColIdx, curRegIdx);
 				m_pRegions[curRegIdx]->removeLastSymbol();
 
+			
+			
 				delete curSymbol;
 
 				if (!state[curRowIdx].isUsedAlready(curColIdx, prev_c))
@@ -536,7 +417,15 @@ namespace sudoku
 			}
 
 
+		
+
+
 			curSymbol = new Symbol(c, curRow, curCol, curRegion);
+
+			curRow = m_pRows[curRowIdx];
+			curCol = m_pCols[curColIdx];
+			curRegion = m_pRegions[curRegIdx];
+
 			curRow->addSymbol(curSymbol);
 			if (curColIdx % m_iRegionDim == 0)
 				curRow->addRegion(curRegion);
@@ -546,7 +435,7 @@ namespace sudoku
 				curCol->addRegion(curRegion);
 
 			curRegion->addSymbol(curSymbol);
-			if (curColIdx == 0)
+			if (curColIdx % m_iRegionDim == 0)
 				curRegion->addRow(curRow);
 
 			curRegion->addCol(curCol);
@@ -561,9 +450,7 @@ namespace sudoku
 			else
 				curColIdx++;
 
-			if (curRowIdx == m_iDim)
-				break;
-
+		
 		}
 
 		return res;
@@ -593,6 +480,39 @@ namespace sudoku
 		}
 
 	}
+
+#ifdef _DEBUG
+	void RGenerator::print_row(vector<char> & v)
+	{
+		cout << endl;
+		for (unsigned int i = 0; i < v.size(); i++)
+		{
+			cout << v[i] << " ";
+			if (i > 0 && (i + 1) % m_iDim == 0)
+				cout << endl;
+		}
+		cout << endl;
+
+	}
+
+	// pseudo random input for testing purposes
+	void RGenerator::init_test_buffer(vector<char> & v)
+	{		
+		v.push_back('5');
+		v.push_back('6');
+		v.push_back('5');
+		v.push_back('6');
+		v.push_back('2');
+		v.push_back('9');
+		v.push_back('4');
+		v.push_back('3');
+		v.push_back('1');
+	}
+
+#endif
+
+
+
 
 }
 
