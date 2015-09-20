@@ -164,15 +164,16 @@ namespace sudoku
 				return false;
 		}
 
-		bool removeSymbol(unsigned char idx)
+		bool removeLastSymbol()
 		{
-			if (idx < m_iLastSymbolIdx)
+			if (m_iLastSymbolIdx > 0)
 			{
-				m_pSymbols[idx] = NULL;
-				return true;
+				m_pSymbols[--m_iLastSymbolIdx] = NULL;
 			}
 			else
 				return false;
+
+			return true;
 		}
 
 		bool addRegion(Region* region)
@@ -276,11 +277,11 @@ namespace sudoku
 			return true;
 		}
 
-		bool removeSymbol(unsigned char idx)
+		bool removeLastSymbol()
 		{
-			if (idx < m_iLastSymbolIdx)
+			if (m_iLastSymbolIdx > 0)
 			{
-				m_pSymbols[idx] = NULL;
+				m_pSymbols[--m_iLastSymbolIdx] = NULL;
 			}
 			else
 				return false;
@@ -330,19 +331,56 @@ namespace sudoku
 			firstRegionHandled = false;
 			secondRegionHandled = false;
 			vertLineHandled = false;
-			usedAlready = 0;
+			
 		}
 		bool firstRegionHandled;
 		bool secondRegionHandled;
 		bool vertLineHandled;
-		char usedAlready;
+		
+		bool isUsedAlready(unsigned char colIdx, char c)
+		{
+			if (m_vUsedAlready.size() > colIdx)
+			{
+				vector<char> & usedAlready = m_vUsedAlready[colIdx];
+			    vector<char>::iterator it = find(usedAlready.begin(), usedAlready.end(), c);
+				if (it != usedAlready.end())
+					return true;
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		void setUsedAlready(unsigned char colIdx, char c)
+		{
+			if (m_vUsedAlready.size() <= colIdx)	
+			{
+				int diff = colIdx - m_vUsedAlready.size() + 1;
+				vector<char> v;
+				for (int i = 0; i < diff; i++)
+					m_vUsedAlready.push_back(v);				
+			}
+
+			m_vUsedAlready[colIdx].push_back(c);
+		}
+
 		void clear() 
 		{
 			firstRegionHandled = false;
 			secondRegionHandled = false;
-			vertLineHandled = false;
-			usedAlready = 0;
+			vertLineHandled = false;			
+			m_vUsedAlready.clear();
 		}
+
+		void clear(unsigned char colIdx)
+		{
+			if (colIdx < m_vUsedAlready.size())
+				m_vUsedAlready[colIdx].clear();
+		}
+
+	private:
+		vector<vector<char>> m_vUsedAlready;
 	};
 
 

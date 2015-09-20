@@ -269,7 +269,7 @@ namespace sudoku
 		unsigned char horizRegIdx = regIdx % M;
 		unsigned char vertRegIdx = regIdx / M;
 		unsigned char horizOffset = colIdx % m_iRegionDim;
-		unsigned char vertOffset = colIdx - vertRegIdx * m_iRegionDim;
+		unsigned char vertOffset = rowIdx - vertRegIdx * m_iRegionDim;
 		unsigned char seqIdx = vertOffset * m_iRegionDim + horizOffset;
 
 		return seqIdx;
@@ -289,7 +289,7 @@ namespace sudoku
 		{
 			for (int i = 0; i < col->getLastSymbIndx(); i++)
 			{
-				if (c == col->getSymbols()[i]->getValue())
+				if (col->getSymbols()[i] != NULL && c == col->getSymbols()[i]->getValue())
 					return false;
 			}
 		}
@@ -298,7 +298,7 @@ namespace sudoku
 		{
 			for (int j = 0; j < row->getLastSymbIndx(); j++)
 			{
-				if (c == row->getSymbols()[j]->getValue())
+				if (row->getSymbols()[j] != NULL && c == row->getSymbols()[j]->getValue())
 					return false;
 			}
 		}
@@ -308,7 +308,7 @@ namespace sudoku
 		{
 			for (unsigned char k = 0; k < region->getLastSymbIndx(); k++)
 			{
-				if (c == region->getSymbols()[k]->getValue())
+				if (region->getSymbols()[k] != NULL && c == region->getSymbols()[k]->getValue())
 					return false;
 			}
 		}
@@ -351,6 +351,10 @@ namespace sudoku
 						for (int i = 0; i < symbCountR1; i++)
 						{
 							cur = symbolsR1[i];
+
+							if (cur == NULL || state[rowIdx].isUsedAlready(colIdx,cur->getValue()))
+								continue;
+
 							if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
 							{
 								state[rowIdx].firstRegionHandled = true;
@@ -370,6 +374,10 @@ namespace sudoku
 						for (int i = 0; i < symbCountR2; i++)
 						{
 							cur = symbolsR2[i];
+
+							if (cur == NULL || state[rowIdx].isUsedAlready(colIdx,cur->getValue()))
+								continue;
+
 							if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
 							{
 								state[rowIdx].secondRegionHandled = true;
@@ -397,6 +405,10 @@ namespace sudoku
 			for (int i = 0; i < symbCountC1; i++)
 			{
 				cur = symbolsC1[i];
+
+				if (cur == NULL || state[rowIdx].isUsedAlready(colIdx,cur->getValue()))
+					continue;
+
 				if (validate(cur->getValue(), rowIdx, colIdx, regIdx))
 				{
 					state[rowIdx].vertLineHandled = true;
@@ -410,12 +422,12 @@ namespace sudoku
 		buffer.pop_back();
 
 		int k = 0, count = 0;
-		while (!validate(c, rowIdx, colIdx, regIdx))
+		while (!validate(c, rowIdx, colIdx, regIdx) || state[rowIdx].isUsedAlready(colIdx,c))
 		{
 			c = symbolTable[k++ % m_iDim];
 			count++;
 
-			if (count == m_iDim + 1)
+			if (count >= m_iDim + 1)
 			{
 				c = 0;
 				break;
@@ -487,26 +499,35 @@ namespace sudoku
 				// backtrack until it is necessary
 				//
 				//
-				if (curRowIdx > 0)
-					curRowIdx--;
+				if (curColIdx > 0)
+				{
+					//state[curRowIdx].clear(curColIdx);
+					curColIdx--;
+				}
 				else
+				{
+					state[curRowIdx].clear();
+					curRowIdx--;
 					curColIdx = m_iDim - 1;
+					
+				}
+
+				curRegIdx = getRegionIdx(curRowIdx, curColIdx);
 
 				curSymbol = m_pRows[curRowIdx]->getSymbols()[curColIdx];
 				prev_c = curSymbol->getValue();
 				curCol = m_pCols[curColIdx];
-				curCol->removeSymbol(curRowIdx);
+				curCol->removeLastSymbol();
 				curRow = m_pRows[curRowIdx];
-				curRow->removeSymbol(curColIdx);
+				curRow->removeLastSymbol();
 
 				unsigned char seqIdx = getInRegionSeqIdx(curRowIdx, curColIdx, curRegIdx);
-				m_pRegions[curRegIdx]->removeSymbol(seqIdx);
+				m_pRegions[curRegIdx]->removeLastSymbol();
 
 				delete curSymbol;
 
-
-
-
+				if (!state[curRowIdx].isUsedAlready(curColIdx, prev_c))
+				    state[curRowIdx].setUsedAlready(curColIdx,prev_c);
 			}
 			
 
@@ -530,7 +551,7 @@ namespace sudoku
 				
 				curRow = NULL;
 				curRowIdx++;
-				curColIdx = 0;
+				curColIdx = 0;				
 			}
 			else
 			    curColIdx++;
