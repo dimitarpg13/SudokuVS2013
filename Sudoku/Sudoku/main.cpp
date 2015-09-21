@@ -215,11 +215,11 @@ void test_generator()
 
 
 	g->getPuzzle()->printToConsole();
-	delete g;
+
 	cout << endl << "The Solution is: " << endl;
 	g->printToConsole();
 	
-
+	delete g;
 }
 
 
@@ -259,6 +259,8 @@ void generate(int grade)
 	cout << endl << "The Solution is: " << endl;
 
 	g->printToConsole();
+
+	delete g;
 }
 
 void solve(string fileName)
