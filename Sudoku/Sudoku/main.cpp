@@ -330,7 +330,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 		if (i == 1)
 		{
-			cout << "Enter a text file name: " << endl;
+			cout << "Enter a text file name : " << endl;
+			cout << "(available input files: example1.txt, example2.txt, example3.txt, example4.txt)" << endl;
 			string fileName;
 			cin >> fileName;
 			solve(fileName);
