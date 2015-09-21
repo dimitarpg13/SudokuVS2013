@@ -59,32 +59,7 @@ namespace sudoku
 
 
 	Generator::~Generator()
-	{
-
-		if (m_pRows != NULL)
-		{
-			for (int i = 0; i < m_iDim; i++)
-				if (m_pRows[i] != NULL)
-					delete m_pRows[i];
-			delete[] m_pRows;
-		}
-
-		if (m_pCols != NULL)
-		{
-			for (int i = 0; i < m_iDim; i++)
-				if (m_pCols[i] != NULL)
-					delete m_pCols[i];
-			delete[] m_pCols;
-		}
-
-		if (m_pRegions != NULL)
-		{
-			for (int i = 0; i < m_iDim; i++)
-				if (m_pRegions[i] != NULL)
-					delete m_pRegions[i];
-			delete[] m_pRegions;
-		}
-
+	{		
 		if (m_pPuzzle != NULL)
 			delete m_pPuzzle;
 

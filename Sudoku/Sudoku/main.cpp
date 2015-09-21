@@ -215,7 +215,7 @@ void test_generator()
 
 
 	g->getPuzzle()->printToConsole();
-
+	delete g;
 	cout << endl << "The Solution is: " << endl;
 	g->printToConsole();
 	
