@@ -1071,6 +1071,7 @@ namespace sudoku
     	 head = head->Next;
       }
 
+	  cleanup(m_lstRankedCandidates);
 	  m_lError &= ~SUDOKU_ERROR_UNSOLVABLE_CONFIGURATION; // clean the spurious errors from the validation process
 	  return res;
   }

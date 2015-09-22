@@ -219,6 +219,11 @@ namespace sudoku
 					delete m_pSymbols[i];
 				delete[] m_pSymbols;
 			}
+
+			if (m_pRegions != NULL)
+			{
+				delete m_pRegions;
+			}
 		}
 
 
@@ -239,6 +244,11 @@ namespace sudoku
 			if (m_pSymbols != NULL)
 			{
 				delete[] m_pSymbols;
+			}
+
+			if (m_pRegions != NULL)
+			{
+				delete m_pRegions;
 			}
 		}
 

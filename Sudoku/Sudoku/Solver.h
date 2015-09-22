@@ -131,7 +131,7 @@ namespace sudoku
 		BTSolver(Puzzle * puzzle) : Solver(puzzle)
 		{
 			m_iRankCount = 0,
-				m_lstRankedCandidates = NULL;
+			m_lstRankedCandidates = NULL;
 			if (puzzle != NULL)
 			{
 				m_vRankedCandidates.resize(puzzle->getDim(), NULL);
