@@ -518,7 +518,7 @@ namespace sudoku
 
 			curGrade = solver->getGrade();
 			unique = solver->validate();
-			if (!unique)
+			if (!unique || curGrade > m_iGrade) // in case the grade jumps by 2 after the last iteration undo the last iteration
 			{
 				// undo the last iteration
 				unsigned char colIdx = 0;
@@ -527,7 +527,7 @@ namespace sudoku
 					colIdx = stack[rowIdx].first;
 					c = stack[rowIdx].second;
 					m_pPuzzle->getRows()[rowIdx]->getSymbols()[colIdx]->setValue(c);
-				}
+				}				
 				continue;
 			}
 
@@ -537,6 +537,7 @@ namespace sudoku
 			{
 				if (curGrade == m_iGrade)
 					break;
+				
 			}
 			else
 			{
