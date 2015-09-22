@@ -8,6 +8,18 @@
 
 #include "stdafx.h"
 
+#define _CRTDBG_MAP_ALLOC
+
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
+
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -225,6 +237,8 @@ void test_generator()
 
 void generate(int grade)
 {
+
+
 	Generator * g = new RGenerator(Puzzle::CLASSIC_SUDOKU_DIM, Puzzle::CLASSIC_SUDOKU_REGION_DIM);
 
 	g->generate(grade);
@@ -313,6 +327,12 @@ void solve(string fileName)
 int _tmain(int argc, _TCHAR* argv[]) {
 	
 	cout << "SudokuQlik" << endl << endl; // prints SudokuQlik
+	
+
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(58302);
+#endif
 
 	//test_generator();
 
@@ -354,6 +374,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		}
 		else if (i == 3)
 		{
+			
+
 			break;
 		}
 		else

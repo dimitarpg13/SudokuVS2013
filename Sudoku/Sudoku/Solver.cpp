@@ -263,7 +263,7 @@ namespace sudoku
 
 	
       res &= solve_internal(m_lstRankedCandidates);
-
+	  
 	  return res;
   }
 
@@ -758,7 +758,7 @@ namespace sudoku
 
 						m_iIterCount++;
 #ifdef _DEBUG
-						cout << "Iteration count : " << m_iIterCount << endl;
+				//		cout << "Iteration count : " << m_iIterCount << endl;
 
 #endif
 	
@@ -766,9 +766,9 @@ namespace sudoku
 
 
 #ifdef _DEBUG
-						cout << endl << "[" << (int) curSymbol->getRow()->getIdx()
-						     << "," << (int) curSymbol->getCol()->getIdx() << "] with "
-						     << sz << " candidates. trying " << curChar << ".. "  << endl;
+				//		cout << endl << "[" << (int) curSymbol->getRow()->getIdx()
+				//		     << "," << (int) curSymbol->getCol()->getIdx() << "] with "
+				//		     << sz << " candidates. trying " << curChar << ".. "  << endl;
 #endif
 
 
@@ -794,9 +794,9 @@ namespace sudoku
 							   curSymbol->incrementFailedCount();
 
 #ifdef _DEBUG
-						       cout << "[" << (int) curSymbol->getRow()->getIdx()
-						    		<< "," << (int) curSymbol->getCol()->getIdx()
-						    		<< "] failed to assign " << curChar << ".. "  << endl;
+				//		       cout << "[" << (int) curSymbol->getRow()->getIdx()
+				//		    		<< "," << (int) curSymbol->getCol()->getIdx()
+				//		    		<< "] failed to assign " << curChar << ".. "  << endl;
 #endif
 
 
@@ -813,9 +813,9 @@ namespace sudoku
 								 curSymbol->setCanChoose(false);
 
 #ifdef _DEBUG
-						    cout << "[" << (int) curSymbol->getRow()->getIdx()
-						    	 << "," << (int) curSymbol->getCol()->getIdx()
-						    	 << "] Assigned " << curChar << endl;
+				//		    cout << "[" << (int) curSymbol->getRow()->getIdx()
+				//		    	 << "," << (int) curSymbol->getCol()->getIdx()
+				//		    	 << "] Assigned " << curChar << endl;
 
 
 #endif
@@ -980,6 +980,21 @@ namespace sudoku
 
   }
 
+  void BTSolver::cleanup(RankNode * head)
+  {
+	
+	  // clean up the nodes of the RankNode list
+	  RankNode * next = NULL;
+	  while (head != NULL)
+	  {
+		  next = head->Next;
+		  delete head;
+		  head = next;
+	  }
+
+
+  }
+
   void BTSolver::cleanup(Puzzle * puzzle, vector<rank_list *>& ranks, RankNode * head)
   {
 	  delete puzzle;
@@ -988,8 +1003,8 @@ namespace sudoku
 		 if (*it != NULL)
 		   delete *it;
 
-	  // TO DO: clean up the nodes of the RankNode list
-
+	  // clean up the nodes of the RankNode list
+	  cleanup(head);
 
 
   }

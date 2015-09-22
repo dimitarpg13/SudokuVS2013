@@ -528,6 +528,7 @@ namespace sudoku
 					c = stack[rowIdx].second;
 					m_pPuzzle->getRows()[rowIdx]->getSymbols()[colIdx]->setValue(c);
 				}
+				continue;
 			}
 
 			delete solver;
@@ -563,6 +564,7 @@ namespace sudoku
 						return false;
 					}
 
+					delete solver;
 					break;
 				}
 			}

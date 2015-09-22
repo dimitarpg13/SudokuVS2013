@@ -146,6 +146,8 @@ namespace sudoku
 			for (vector<rank_list *>::iterator it = m_vRankedCandidates.begin(); it != m_vRankedCandidates.end(); it++)
 				if (*it != NULL)
 					delete *it;
+
+			
 		};
 	private:
 
@@ -170,6 +172,7 @@ namespace sudoku
 
 		bool solve_internal(RankNode *);
 		bool validate_internal(char, int);
+		void cleanup(RankNode * head);
 		void cleanup(Puzzle *, vector<rank_list *>&, RankNode *);
 
 		bool update_symbols(Symbol*, Symbol **, unsigned char);

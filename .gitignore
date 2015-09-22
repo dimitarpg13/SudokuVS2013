@@ -1,0 +1,16 @@
+Sudoku/Debug/Sudoku.exe
+Sudoku/Debug/Sudoku.ilk
+*.pdb
+Sudoku/Sudoku.opensdf
+*.sdf
+*.suo
+*.obj
+Sudoku/Sudoku/Debug/Sudoku.Build.CppClean.log
+*.log
+Sudoku/Sudoku/Debug/Sudoku.tlog/cl.command.1.tlog
+*.tlog
+Sudoku/Sudoku/Debug/vc120.idb
+*.suo
+*.suo
+Sudoku/Sudoku.v12.suo
+*.suo
