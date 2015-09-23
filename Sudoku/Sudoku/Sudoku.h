@@ -76,9 +76,12 @@ namespace sudoku
 		{ }
 
 
-
-
-		~Symbol() { if (m_pAssignments != NULL) delete m_pAssignments; }
+		~Symbol() { 			         
+			         if (m_pAssignments != NULL) 
+						 delete m_pAssignments; 
+					 while (!m_skLastRemoved.empty())
+						 m_skLastRemoved.pop();
+		          }
 
 		bool isEmpty() { return m_cVal == 0; }
 

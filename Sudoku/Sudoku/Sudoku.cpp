@@ -262,9 +262,7 @@ namespace sudoku
 		return res;
 	}
 
-
 	
-
 	
 
 	Puzzle::~Puzzle()

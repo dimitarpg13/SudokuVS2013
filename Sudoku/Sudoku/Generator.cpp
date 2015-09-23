@@ -513,6 +513,7 @@ namespace sudoku
 			if (!res)
 			{
 				m_lError |= solver->getError();
+				delete solver;
 				return false;
 			}
 
@@ -527,7 +528,9 @@ namespace sudoku
 					colIdx = stack[rowIdx].first;
 					c = stack[rowIdx].second;
 					m_pPuzzle->getRows()[rowIdx]->getSymbols()[colIdx]->setValue(c);
-				}				
+				}
+				delete solver;
+
 				continue;
 			}
 
@@ -561,7 +564,7 @@ namespace sudoku
 					if (curGrade != 1 || !unique)
 					{
 						m_lError |= SUDOKU_ERROR_PUZZLE_GENERATION_FROM_RANDOM_INPUT;
-						delete solver;
+						delete solver;					
 						return false;
 					}
 
@@ -574,7 +577,9 @@ namespace sudoku
 		}
 
 		if (curIter < MAX_ITERATION_COUNT)
+		{
 			return true;
+		}
 		else
 		{
 			m_lError |= SUDOKU_ERROR_PUZZLE_GENERATION_ITER_COUNT_EXCEEDED;
