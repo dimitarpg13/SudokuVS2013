@@ -193,6 +193,8 @@ namespace sudoku
 		void initCummDistribHardLevel(vector<int> & cd);
 		void initCummDistribSamuraiLevel(vector<int> & cd);
 
+		int createGrade(int); // creates a grade using iter count; return values: 1 - Easy, 2 - Medium, 3 - Hard, 4 - Samurai
+
 #ifdef _DEBUG
 		// helper methods for debugging
 		void print_ranked_candidates(vector<rank_list *> &);

@@ -137,6 +137,12 @@ namespace sudoku
 			return false;
 		}
 
+		if (fs.fail())
+		{
+			m_lError |= SUDOKU_ERROR_MISSING_INPUT_FILE;
+			return false;
+		}
+
 		init();
 
 		unsigned char curRowIdx = 0, curColIdx = 0, curRegIdx = 0;
@@ -241,7 +247,7 @@ namespace sudoku
 
 		fs.close();
 
-		if (curRowIdx != m_iDim)
+		if (curRowIdx != 0 && curRowIdx != m_iDim)
 		{
 			m_lError |= SUDOKU_ERROR_INCORRECT_INPUT_ROW_COUNT;
 

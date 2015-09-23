@@ -133,7 +133,7 @@ namespace sudoku
 	  
 	  res = 0.0;
 	  for (unsigned short i = 0; i < cd1.size(); i++)
-		  res += pow(abs(cd1[i] - cd2[i]),2.0);
+		  res += (cd1[i] - cd2[i]) * i;
 	  
 	  return res;
   }
@@ -221,7 +221,15 @@ namespace sudoku
 		  res = cummDistribErrorFunc(srcCD, samuraiCD);
 		  errVect.push_back(res);
 
-		  double min = numeric_limits<double>::max();
+		  int grade = 1;
+		  for (unsigned char i = 0; i < errVect.size(); i++)
+		  {
+			  if (errVect[i] > 0)
+				  grade = i + 1;
+		  }
+
+
+		 /* double min = numeric_limits<double>::max();
 		  int idx_min = -1;
 		  for (unsigned short i = 0; i < errVect.size(); i++)
 		  {
@@ -232,8 +240,8 @@ namespace sudoku
 			  }
 		  }
 
-		  return idx_min+1;
-
+		  return idx_min+1;*/
+		  return grade;
 
 	  }
 	  else
@@ -245,6 +253,20 @@ namespace sudoku
 	 
   }
 
+  // creates a grade using iter count; return values: 1 - Easy, 2 - Medium, 3 - Hard, 4 - Samurai
+  int BTSolver::createGrade(int iterCount)
+  {
+	  if (iterCount < 1000)
+		  return 1;
+	  else if (iterCount >= 1000 && iterCount < 8000)
+		  return 2;
+	  else if (iterCount >= 8000 && iterCount < 150000)
+		  return 3;
+	  else
+	      return 4;
+
+  }
+
   bool BTSolver::solve()
   {
 	  bool res = true;
@@ -252,7 +274,7 @@ namespace sudoku
       if (!res)
     	  return res;
 
-	  m_iGrade = createGrade(m_vRankedCandidates);
+	  //m_iGrade = createGrade(m_vRankedCandidates);
 
 
 #ifdef _DEBUG
@@ -264,6 +286,8 @@ namespace sudoku
 	
       res &= solve_internal(m_lstRankedCandidates);
 	  
+	  m_iGrade = createGrade(m_iIterCount);
+
 	  return res;
   }
 
@@ -1060,8 +1084,8 @@ namespace sudoku
   {
 	  bool res = true;
     
+	  int iterCount = m_iIterCount;
       RankNode * head = m_lstRankedCandidates;
-
 	  int idx = 0;
       while (head != NULL)
       {
@@ -1070,9 +1094,10 @@ namespace sudoku
        	
     	 head = head->Next;
       }
-
+	  m_iIterCount = iterCount; // restore the correct gr
 	  cleanup(m_lstRankedCandidates);
 	  m_lError &= ~SUDOKU_ERROR_UNSOLVABLE_CONFIGURATION; // clean the spurious errors from the validation process
+
 	  return res;
   }
 

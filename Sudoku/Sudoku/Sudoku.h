@@ -545,8 +545,18 @@ namespace sudoku
 			m_pRegions = NULL;
 
 			bool res = m_pParser->parse(inputFile);
+			if (!res)
+			{
+				m_lError |= m_pParser->getError();
+				return false;
+			}
 
 			res = process_parsed_config();
+			if (!res)
+			{
+				m_lError |= m_pParser->getError();
+				return false;
+			}
 
 			return res;
 		}

@@ -519,7 +519,14 @@ namespace sudoku
 
 			curGrade = solver->getGrade();
 			unique = solver->validate();
-			if (!unique || curGrade > m_iGrade) // in case the grade jumps by 2 after the last iteration undo the last iteration
+
+			cout << "Current grade : " << curGrade << endl;
+			if (unique)
+				cout << "is unique" << endl;
+			else
+				cout << "is NOT unique!!!" << endl;
+
+			if (!unique || ((curGrade > m_iGrade) && (m_iGrade > 1))) // in case the grade jumps by 2 after the last iteration undo the last iteration
 			{
 				// undo the last iteration
 				unsigned char colIdx = 0;
@@ -546,7 +553,7 @@ namespace sudoku
 			{
 				// we do not want to pick the trivial easy problems - select that one 
 				// which is just one iteration before becoming moderate
-				if (curGrade == 2)
+				if (curGrade >= 2)
 				{
 					// undo the last iteration
 					unsigned char colIdx = 0;

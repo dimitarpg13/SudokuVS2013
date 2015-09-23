@@ -283,7 +283,28 @@ void solve(string fileName)
 	Solver * s = NULL;
 
 	cout << fileName << ":" << endl;
-	p->load(fileName);
+	if (!p->load(fileName))
+	{
+		if (p->getError() & SUDOKU_ERROR_INCORRECT_INPUT_FORMAT)
+		{
+			cout << endl << "Incorrect input format!!!" << endl;
+		}
+		else if (p->getError() & SUDOKU_ERROR_INCORRECT_INPUT_ROW_COUNT)
+		{
+			cout << endl << "Incorrect input row count!!!" << endl;
+		}
+		else if (p->getError() & SUDOKU_ERROR_INCORRECT_INPUT_COL_COUNT)
+		{
+			cout << endl << "Incorrect input column count!!!" << endl;
+		}
+		else if (p->getError() & SUDOKU_ERROR_MISSING_INPUT_FILE)
+		{
+			cout << endl << "Missing input file!!!" << endl;
+		}
+
+		return;
+	}
+
 	s = new BTSolver(p);
 	if (!s->solve())
 	{
@@ -297,6 +318,8 @@ void solve(string fileName)
 			{
 				cout << endl << "Inconsistent internal state!!!" << endl;
 			}
+
+			return;
 		}
 	}
 
